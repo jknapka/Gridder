@@ -15,23 +15,24 @@ import java.util.LinkedList;
  * @author jk
  */
 class LayoutParser {
-
-	private static class ComponentPosition {
-		String name;
-		int row;
-		int col;
-		int width;
-		int height;
-	}
-
-	private LinkedList<ComponentPosition> components;
 	
+	/**
+	 * Parse a layout string.
+	 * @param layout The layout string to parse.
+	 */
 	LayoutParser(String layout) {
 		super();
 		components = new LinkedList<>();
 		parseLayout(layout);
 	}
-	
+
+	/**
+	 * Get the positioning information associated with a component ID.
+	 * @param cname The component ID from the layout string.
+	 * @return an int[] containing, in order, the row, column,
+	 * grid width, and grid height of the component, or null
+	 * if the component was not found.
+	 */
 	int[] getComponentPositionAndSize(String cname) {
 		if (cname == null) {
 			throw new IllegalArgumentException("cname cannot be null");
@@ -43,7 +44,12 @@ class LayoutParser {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Parse a layout string and update this.components with the
+	 * positions and extents of the component IDs in the layout.
+	 * @param layout The string to parse.
+	 */
 	public void parseLayout(String layout) {
 		int row=0, col=0, idx=0;
 		int[] idxHolder = new int[] {idx};
@@ -97,15 +103,18 @@ class LayoutParser {
 				++col;
 			}
 		}
-		dumpLayout();
 	}
 
-	private void dumpLayout() {
-		for (ComponentPosition cp: components) {
-			System.out.println(cp.name+" row "+cp.row+" col "+ cp.col +" w "+ cp.width + " h "+cp.height);
-		}
-	}
-	
+	/**
+	 * Parse a layout token from a layout string at a given position.
+	 * @param layout The layout string.
+	 * @param idxHolder A one-element int[] array containing the index
+	 * 		at which to parse a token. The single element is updated
+	 * 		to indicate the next un-parses position in the layout string.
+	 * @return The parsed token, if any, or an empty string if we
+	 * 		reach the end of the layout string without finding a
+	 * 		valid token.
+	 */
 	private String parseToken(String layout,int[] idxHolder) {
 		String result = "";
 		int idx = idxHolder[0];
@@ -157,6 +166,12 @@ class LayoutParser {
 		return result;
 	}
 
+	/**
+	 * Check whether a character terminates an identifier.
+	 * @param c The character to check
+	 * @return true if the given character is whitespace or
+	 * 		one of the layout structural characters.
+	 */
 	private boolean isTerminatingChar(char c) {
 		return Character.isWhitespace(c) ||
 				(c == '{') ||
@@ -167,7 +182,14 @@ class LayoutParser {
 				(c == '-') ||
 				(c == '.');
 	}
-	
+
+	/**
+	 * Find the component directly above the given row,col coordinate.
+	 * @param row The row above which to search.
+	 * @param col The column in which to search.
+	 * @return The component found above the given row,col, or null
+	 * if no component was found.
+	 */
 	private ComponentPosition findComponentAbove(int row,int col) {
 		for (--row; row >=0; --row) {
 			for (ComponentPosition cp: components) {
@@ -178,4 +200,16 @@ class LayoutParser {
 		}
 		return null;
 	}
+
+	// A structure to hold component positioning information.
+	private static class ComponentPosition {
+		String name;
+		int row;
+		int col;
+		int width;
+		int height;
+	}
+
+	// A list of component positions parsed from a layout string.
+	private LinkedList<ComponentPosition> components;
 }

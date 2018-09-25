@@ -279,6 +279,15 @@ public class Gridder {
 	}
 
 	/**
+	 * Update this Gridder's default constraints with the constraints
+	 * given in the constraint list.
+	 * @param constraints A list of constraint names and values.
+	 */
+	public void updateConstraints(Object...constraints) {
+		parseConstraints(this.defaultConstraints,constraints);
+	}
+	
+	/**
 	 * When adding a component based on a layout string, add the necessary
 	 * grid size and weight parameters to the constraints.
 	 * @param gridwidth The gridwidth of the component being added.
