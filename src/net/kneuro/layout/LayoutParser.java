@@ -50,9 +50,9 @@ class LayoutParser {
 	 * positions and extents of the component IDs in the layout.
 	 * @param layout The string to parse.
 	 */
-	public void parseLayout(String layout) {
-		int row=0, col=0, idx=0;
-		int[] idxHolder = new int[] {idx};
+	private void parseLayout(String layout) {
+		int row=0, col=0;
+		int[] idxHolder = new int[] {0};
 		ComponentPosition cp = null;
 		while (idxHolder[0] < layout.length()) {
 			String tok = parseToken(layout,idxHolder);
