@@ -242,6 +242,12 @@ public class Gridder {
 	 * @param row The first grid row the component occupies.
 	 * @param col The first grid column the component occupies.
 	 * @param constraints Any additional constraints to apply to the component.
+	 * These can be specified any way the caller likes:
+     * - As one big string, like "gridwidth 2 weightx 3.0"
+     * - As a list of strings, like "gridwidth 2","weightx 3.0"
+     * - As a list of constraint names and values, like
+     *   "gridwidth",2,"weightx",3.0
+     * - Or any combination of these.
 	 */
 	public void add(Component comp, int row, int col, Object...constraints) {
 		GridBagConstraints gbc = copyGBC(defaultConstraints);
@@ -266,6 +272,12 @@ public class Gridder {
 	 * @param layoutName The layout ID of the component within the layout string.
 	 * @param comp The component to add.
 	 * @param constraints Any additional constraints to apply to the component.
+	 * These can be specified any way the caller likes:
+     * - As one big string, like "gridwidth 2 weightx 3.0"
+     * - As a list of strings, like "gridwidth 2","weightx 3.0"
+     * - As a list of constraint names and values, like
+     *   "gridwidth",2,"weightx",3.0
+     * - Or any combination of these.
 	 * Note that gridwidth and gridheight constraints will be ignored since
 	 * they are derived from the layout string.
 	 */
@@ -314,11 +326,6 @@ public class Gridder {
 	/**
 	 * Parse a set of constraints and update a GridBagConstraints object.
 	 * @param constraints Logically, a list of constraintName value pairs.
-	 * These can be specified any way the caller likes:
-     * - As one big string, like "gridwidth 2 weightx 3.0"
-     * - As a list of strings, like "gridwidth 2","weightx 3.0"
-     * - As a list of constraint names and values, like
-     *   "gridwidth",2,"weightx",3.0
 	 * @return A GridBagConstraints object with all constraints filled
 	 * in as specified, and default values for any unspecified constraint.
 	 */
@@ -371,22 +378,22 @@ public class Gridder {
 	 * Interpret a single constraint and its value.
 	 * @param cname The constraint name.
 	 * @param cval The constraint value.
-	 * @param gbc The GridBagConstraint object to upate.
+	 * @param gbc The GridBagConstraint object to update.
 	 * @throws RuntimeException if the constraint cannot be interpreted.
 	 */
 	private void interpretConstraint(String cname,String cval,GridBagConstraints gbc) {
 		switch (cname) {
 		case "gridwidth":
-			gbc.gridwidth = toInt(cval);
+			gbc.gridwidth = toInt(cname,cval);
 			break;
 		case "gridheight":
-			gbc.gridheight = toInt(cval);
+			gbc.gridheight = toInt(cname,cval);
 			break;
 		case "weightx":
-			gbc.weightx = toDouble(cval);
+			gbc.weightx = toDouble(cname,cval);
 			break;
 		case "weighty":
-			gbc.weighty = toDouble(cval);
+			gbc.weighty = toDouble(cname,cval);
 			break;
 		case "anchor":
 			gbc.anchor = toAnchorValue(cval);
@@ -395,28 +402,28 @@ public class Gridder {
 			gbc.fill = toFillValue(cval);
 			break;
 		case "ipadx":
-			gbc.ipadx = toInt(cval);
+			gbc.ipadx = toInt(cname,cval);
 			break;
 		case "ipady":
-			gbc.ipady = toInt(cval);
+			gbc.ipady = toInt(cname,cval);
 			break;
 		case "inset_top":
 		case "insets_top":
 			// Note: we know gbc.insets is non-null because we create all
 			// GBC objects that this code will see.
-			gbc.insets.top = toInt(cval);
+			gbc.insets.top = toInt(cname,cval);
 			break;
 		case "inset_bottom":
 		case "insets_bottom":
-			gbc.insets.bottom = toInt(cval);
+			gbc.insets.bottom = toInt(cname,cval);
 			break;
 		case "inset_left":
 		case "insets_left":
-			gbc.insets.left = toInt(cval);
+			gbc.insets.left = toInt(cname,cval);
 			break;
 		case "inset_right":
 		case "insets_right":
-			gbc.insets.right = toInt(cval);
+			gbc.insets.right = toInt(cname,cval);
 			break;
 		default:
 			throw new RuntimeException("Unknown constraint: "+cname);
@@ -536,11 +543,11 @@ public class Gridder {
 	 * @return The corresponding integer value.
 	 * @throws RuntimeException if conversion fails.
 	 */
-	private int toInt(String value) {
+	private int toInt(String cname,String value) {
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException ex) {
-			throw new RuntimeException("Bad int constraint value {"+value+"}");
+			throw new RuntimeException("Bad int constraint value {"+value+"} for constraint "+cname);
 		}
 	}
 	
@@ -551,11 +558,11 @@ public class Gridder {
 	 * @return The corresponding double value.
 	 * @throws RuntimeException if conversion fails.
 	 */
-	private double toDouble(String value) {
+	private double toDouble(String cname,String value) {
 		try {
 			return Double.parseDouble(value);
 		} catch (NumberFormatException ex) {
-			throw new RuntimeException("Bad float constraint value {"+value+"}");
+			throw new RuntimeException("Bad float constraint value {"+value+"} for constraint "+cname);
 		}
 	}
 	

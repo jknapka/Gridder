@@ -110,7 +110,7 @@ class LayoutParser {
 	 * @param layout The layout string.
 	 * @param idxHolder A one-element int[] array containing the index
 	 * 		at which to parse a token. The single element is updated
-	 * 		to indicate the next un-parses position in the layout string.
+	 * 		to indicate the next un-parsed position in the layout string.
 	 * @return The parsed token, if any, or an empty string if we
 	 * 		reach the end of the layout string without finding a
 	 * 		valid token.
