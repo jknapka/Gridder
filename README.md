@@ -23,7 +23,7 @@ you want it to manage, as well as any default constraints as a
 simple string of "constraintName value" pairs (or as multiple
 strings of such values, or as constraint names followed by their
 string, integer, or floating-point values, since the final argument
-to Gridder() is a varargs array).
+to `Gridder()` is a varargs array).
 
 ```
    JFrame topLevel = new JFrame();
@@ -36,7 +36,7 @@ to Gridder() is a varargs array).
 You can then add components via the Gridder object, which handles
 all the nastiness of setting up the GridBagConstraints. Pass the
 grid row and column of the top-left cell the component should
-occupy as the second and third arguments to add().
+occupy as the second and third arguments to `add()`.
 
 ```
    // Uses the default constraints, places label at row 0, column 2.
@@ -44,7 +44,7 @@ occupy as the second and third arguments to add().
 ```
 
 For any individual component, you can override the default constraints
-in the add() method (which does not change the defaults). Constraints
+in the `add()` method (which does not change the defaults). Constraints
 are specified exactly as they are to the Gridder constructor, as varargs
 after the column number.
 
@@ -60,8 +60,8 @@ future `add()` calls.
 In general, all constraint names are the same as the corresponding
 member names of the GridBagConstaints class. The exception is the
 GridBagConstraints.insets member, which is realized here as
-separate constraints inset_top, inset_bottom, inset_left, and
-inset_right.
+separate constraints `inset_top`, `inset_bottom`, `inset_left`, and
+`inset_right`.
 
 Constraint values can be specified as either raw values of the
 appropriate type, or as strings that can be converted to the
@@ -74,7 +74,7 @@ I expect such problems to occur only during development, so
 throwing a RuntimeException seems reasonable.
 
 Constraint names, values, and defaults (if not specified in the
-Gridder constructor or the add() method) are summarized in the
+Gridder constructor or the `add()` method) are summarized in the
 following table (note that the defaults for weights are different
 when text-based layouts are used - see below).
 
