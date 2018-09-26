@@ -1,0 +1,18 @@
+<project name="Gridder" default="build" basedir="..">
+
+    <path id="build.classpath">
+    </path>
+
+    <target name="clean">
+	 <delete file="gridder.jar"/>
+	 <delete dir="./target"/>
+    </target>
+
+    <target name="build">
+	<mkdir dir="./target"/>
+        <javac srcdir="src" destdir="target" debug="true"
+            classpathref="build.classpath"/>
+        <jar jarfile="gridder.jar" basedir="target" includes="**/*.class" excludes="**/GridderTest*.class"/>
+    </target>
+
+</project>
