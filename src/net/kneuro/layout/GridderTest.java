@@ -20,12 +20,12 @@ public class GridderTest {
 				 "    {|  . c6 -}    ";
 		gr.parseLayout(layout);
 		
-		gr.add("c1", new JLabel("Top left"));
-		gr.add("c4", new JLabel("Kinda middle"));
-		gr.add("c2", new JButton("Top right"),"anchor e");
-		gr.add("c5", new JCheckBox("Check me"),"anchor w");
+		gr.add("c1", new JLabel("c1: Top left"));
+		gr.add("c4", new JLabel("c4: Kinda middle"));
+		gr.add("c2", new JButton("c2: Top right"),"anchor e");
+		gr.add("c5", new JCheckBox("c5: Check me"),"anchor e");
 		gr.add("c3", getSubPanel(), "weightx 1.0","weighty",1.0,"fill both");
-		gr.add("c6", new JLabel("Bottom right label with very long string"), "anchor w");
+		gr.add("c6", new JLabel("c6: Bottom right label with very long string"), "anchor w");
 		
 		top.pack();
 		top.addWindowListener(new WindowListener() {
@@ -72,10 +72,11 @@ public class GridderTest {
 		JPanel pnl = new JPanel();
 		pnl.setBorder(BorderFactory.createEtchedBorder());
 		Gridder gr = new Gridder(pnl);
-		gr.add(new JButton("Grow"), 0,0,"anchor nw weightx 1 weighty 1 fill xy");
-		gr.add(new JButton("Float NE"), 0,1,"anchor ne weightx 1 weighty 1");
-		gr.add(new JButton("Stay"), 1,0,"anchor","e");
-		gr.add(new JButton("Together"), 1,1,"anchor",GridBagConstraints.WEST);
+		gr.add(new JLabel("c3: a subpanel"),0,0,"gridwidth 2");
+		gr.add(new JButton("Grow"), 1,0,"anchor nw weightx 1 weighty 1 fill xy");
+		gr.add(new JButton("Float NE"), 1,1,"anchor ne weightx 1 weighty 1");
+		gr.add(new JButton("Stay"), 2,0,"anchor","e");
+		gr.add(new JButton("Together"), 2,1,"anchor",GridBagConstraints.WEST);
 		return pnl;
 	}
 }

@@ -150,6 +150,18 @@ the position and extent of each component. This layout says that:
   row 3.
 - The cell at row 2, column 2 is empty.
 
+An example presentation built from the layout string above
+can be found in GridderTest.java. Here is the window as
+it is initially shown:
+
+![Initial packed layout](images/GridderTest-1.png)
+
+And here it is after being resized:
+![Resized layout](images/GridderTest-2.png)
+
+The four buttons in the lower left are in a separate JPanel
+configured by its own Gridder instance.
+
 In general, 
 
 - Curly brackets `{` and `}` delimit each grid row;
@@ -194,7 +206,7 @@ laid out in a nonsensical manner. So don't do that.
 
 To add a component to a container based on the last layout
 string parsed, use the `add(String layoutId,Component comp)`
-method, and set the layoutId to a layout identifier from
+method, and set the layoutId to a component identifier from
 the layout string. For example,
 
 ```
