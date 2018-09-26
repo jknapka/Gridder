@@ -10,6 +10,8 @@ public class GridderTest {
 	public static void main(String[] argv) throws Exception {
 		JFrame top = new JFrame("Gridder test");
 
+		// Build a grid using the 2D layout example from README.md. The
+		// c3 component will be a JPanel with its own layout.
 		Gridder gr = new Gridder(top.getContentPane());
 		String layout =
 				 "    {c1 - - c2}    "+
@@ -63,7 +65,9 @@ public class GridderTest {
 		
 		while (true) Thread.sleep(1000);
 	}
-	
+
+	// Get a JPanel with some buttons. This is an example
+	// of using the basic add(Component,row,col) API.
 	private static JComponent getSubPanel() {
 		JPanel pnl = new JPanel();
 		pnl.setBorder(BorderFactory.createEtchedBorder());
