@@ -12,6 +12,10 @@ GridBagConstraints. It does not perform any layout management
 itself, it is just a convenient way to specify layout
 information to GridBagLayout.
 
+## License
+
+Gridder is offered under the MIT license. See license.txt for details.
+
 ## Basic Usage
 
 To use Gridder, create a Gridder instance and give it the container
@@ -49,9 +53,9 @@ after the column number.
    gr.add(nameFld,0,3,"weightx", 4.0,"fill horizontal");
 ```
 
-You can also call gr.updateConstraints("constraint1 value1 ...") to
+You can also call `gr.updateConstraints("constraint1 value1 ...")` to
 update the default constraints, which will then be used for all
-future add() calls.
+future `add()` calls.
 
 In general, all constraint names are the same as the corresponding
 member names of the GridBagConstaints class. The exception is the
