@@ -49,6 +49,9 @@ are specified exactly as they are to the Gridder constructor, as varargs
 after the column number.
 
 ```
+   // Uses the default constraints, except that the weightx and
+   // fill constraints are overridden by the trailing arguments
+   // to add().
    JTextField nameFld = new JTextField();
    gr.add(nameFld,0,3,"weightx", 4.0,"fill horizontal");
 ```
