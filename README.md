@@ -117,6 +117,9 @@ layout in a 2D fashion. You can then add components to the
 container using identifiers mentioned in the layout string. 
 You should either use a text-based layout or the plain
 `add(Component,row,column)` API for any given container, not both.
+(However, it is perfectly OK for nested containers to use
+their own Gridder instances, or some other layout manager entirely,
+and configure their layouts any way they like.)
 
 ### The 2D Layout Language
 
