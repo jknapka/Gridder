@@ -11,6 +11,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.JComponent;
+
 /**
  * This class makes Swing's GridBagLayout easier, even a pleasure,
  * to use. It provides an interface to GridBagLayout that resembles
@@ -18,65 +20,65 @@ import java.awt.Insets;
  * based layout function, with which you can write a string that
  * represents the position and extent of each component in a 2D
  * fashion.
- * 
+ * <p>
  * This class is merely a thin wrapper around GridBagLayout and
  * GridBagConstraints. It does not perform any layout management
  * itself, it is just a convenient way to specify layout
  * information to GridBagLayout.
- * 
+ * <p>
  * BASIC USAGE
- * 
+ * <p>
  * To use Gridder, create a Gridder instance and give it the container
  * you want it to manage, as well as any default constraints as a
  * simple string of "constraintName value" pairs (or as multiple
  * strings of such values, or as constraint names followed by their
  * string, integer, or floating-point values, since the final argument
  * to Gridder() is a varargs array).
- * 
+ * <pre>
  *    JFrame topLevel = new JFrame();
  *    Gridder gr = new Gridder(topLevel.getContentPane(),
  *          "weightx 1.0 weighty 0.0",
  *    		"inset_top 5", "inset_bottom", 5,
  *          "anchor center","fill","xy");
- * 
+ * </pre>
  * You can then add components via the Gridder object, which handles
  * all the nastiness of setting up the GridBagConstraints.
- * 
+ * <pre>
  *    // Uses the default constraints, places label at row 0, column 2.
  *    gr.add(new JLabel("Name:"),0,2);
- * 
+ * </pre>
  * For any individual component, you can override the default constraints
  * in the add() method (which does not change the defaults). Constraints
  * are specified exactly as they are to the Gridder constructor.
- * 
+ * <pre>
  *    JTextField nameFld = new JTextField();
  *    gr.add(nameFld,0,3,"weightx", 4.0,"fill horizontal");
- * 
+ * </pre>
  * You can also call gr.updateConstraints("constraint1 value1 ...") to
  * update the default constraints, which will then be used for all
  * future add() calls.
- * 
+ * <p>
  * In general, all constraint names are the same as the corresponding
  * member names of the GridBagConstaints class. The exception is the
  * GridBagConstraints.insets member, which is realized here as
  * separate constraints inset_top, inset_bottom, inset_left, and
  * inset_right.
- * 
+ * <p>
  * Constraint values can be specified as either raw values of the
  * appropriate type, or as strings that can be converted to the
  * appropriate type.
- * 
+ * <p>
  * Unrecognized constraints or constraints with invalid
  * values cause a RuntimeException. Since the expected usage of
  * this class is to set up a container at UI-construction time,
  * I expect such problems to occur only during development, so
  * throwing a RuntimeException seems reasonable.
- * 
+ * <p>
  * Constraint names, values, and defaults (if not specified in the
  * Gridder constructor or the add() method) are summarized in the
  * following table (note that the defaults for weights are different
  * when text-based layouts are used - see below).
- * 
+ * <pre>
  * GBC.member       Gridder name                Possible values         Default
  * ----------------------------------------------------------------------------
  * gridwidth        gridwidth                   Integer                 1
@@ -109,54 +111,59 @@ import java.awt.Insets;
  * gridx            None                        Supplied by the Gridder.add() method.
  * gridy            None                        Supplied by the Gridder.add() method.
  * ----------------------------------------------------------------------------
- * 
+ * </pre>
+ * <p>
  * TEXT-BASED LAYOUTS
- * 
+ * <p>
  * The other, and sometimes more convenient way to use Gridder is
  * to parse a textual layout string, and then add components to the
  * container using identifiers mentioned in the layout string. 
  * You should either use a text-based layout or the plain
  * add(Component,row,column) API for any given container, not both.
- * 
+ * <p>
  * For example, here is a somewhat complex layout:
- * 
+ * <pre>
  * String layout =
  *    "    {c1 - - c2}    "+
  *    "    {c3 - c4 -}    "+
  *    "    {|  . . c5}    "+
  *    "    {|  . c6 -}    ";
  * gr.parseLayout(layout);
- * 
+ * </pre>
  * (Whitespace added to layout string for clarity.) Such a string
  * represents a rectangular array of grid cells and identifies
  * the position and extent of each component. This layout says that:
- * 
- * - Component c1 occupies the first three cells of row 0
+ * <p>
+ * <ul>
+ * <li> Component c1 occupies the first three cells of row 0
  *   (- means "extend the previous component into this column").
- * - Component c2 occupies the fourth cell of row 0.
- * - Component c3 occupies the first two cells of row 1, and
+ * <li> Component c2 occupies the fourth cell of row 0.
+ * <li> Component c3 occupies the first two cells of row 1, and
  *   extends two cells downward to row 3 (| means "extend
  *   the component directly above into this row").
- * - Component c4 occupies the third and fourth cells of
+ * <li> Component c4 occupies the third and fourth cells of
  *   row 1.
- * - Component c5 occupies the fourth cell of row 2.
- * - Component c6 occupies the third and fourth cells of
+ * <li> Component c5 occupies the fourth cell of row 2.
+ * <li> Component c6 occupies the third and fourth cells of
  *   row 3.
- * - The cell at row 2, column 2 is empty.
- * 
+ * <li> The cell at row 2, column 2 is empty.
+ * </ul>
+ * <p>
  * In general, 
- * - Curly brackets { and } delimit each grid row;
- * - - causes the gridwidth of the component to the
+ * <ul>
+ * <li> Curly brackets { and } delimit each grid row;
+ * <li> - causes the gridwidth of the component to the
  *   left to be increased by 1;
- * - | causes the gridheight of the component *directly*
+ * <li> | causes the gridheight of the component *directly*
  *   above to be increased by 1;
- * - . simply occupies space. All grid cells must be
+ * <li> . simply occupies space. All grid cells must be
  *   filled with either a component identifier or
  *   one of the characters .<^|-
- * - < is a synonym for - and ^ is a synonym for |, for
+ * <li> < is a synonym for - and ^ is a synonym for |, for
  *   historical compatibility with an earlier version
  *   of this code.
- * 
+ * </ul>
+ * <p>
  * The - and | characters extending away from a component
  * denote the extent of that component. Dot characters are used
  * to fill in the space occupied by a multi-cell component, and
@@ -169,37 +176,38 @@ import java.awt.Insets;
  * a completely valid example, even with the additional
  * whitespace. It could have been specified without extra
  * whitespace like this:
- * 
+ * <pre>
  *    String layout="{c1--c2}{c3-c4-}{|..c5}{|.c6-}";
- *
+ * </pre>
  * but that would defeat the purpose of making the 2D structure
  * of the layout clear.
- * 
+ * <p>
  * To add a component to a container based on the last layout
  * string parsed, use the add(String layoutId,Component comp)
  * method, and set the layoutId to a layout identifier from
  * the layout string. For example,
- * 
+ * <pre>
  *    gr.add("c1",new JLabel("Top left label"));
- *    
+ * </pre>   
  * adds the JLabel at the position of the "c1" token in the
  * layout string. You can add components in any order, since
  * their grid positions and extents are derived from the
  * layout string.
- * 
+ * <p>
  * As in the other add() method, you can specify additional
  * constraints:
- * 
+ * <pre>
  *    JButton btn1(new AbstractAction("Push me") {...});
  *    gr.add("c2", btn1, "weightx 5.0");
- * 
+ * </pre>
+ * <p>
  * There are two things to remember about constraints when using
  * text-based layouts, however:
- * 
- * 1) Any gridwidth or gridheight constraints you supply will
+ * <ol>
+ * <li> Any gridwidth or gridheight constraints you supply will
  *    be ignored, since those constraints will be derived from
  *    the layout string.
- * 2) If you do not explicitly supply weightx and weighty
+ * <li> If you do not explicitly supply weightx and weighty
  *    constraints, those constraints will be set to 1/100 of
  *    the gridwidth and gridheight of the component, respectively.
  *    This is because usually, we want components to scale
@@ -212,7 +220,8 @@ import java.awt.Insets;
  *    are large relative to the gridsize/100 values assigned
  *    to other components by default. I advise using explicit
  *    weights with ranges >= 1.0.
- * 
+ * </ol>
+ * <p>
  * It is, of course, possible to write a nonsensical layout
  * using the simple layout language described above. In the
  * interest of keeping it simple, the code does not defend
@@ -243,11 +252,13 @@ public class Gridder {
 	 * @param col The first grid column the component occupies.
 	 * @param constraints Any additional constraints to apply to the component.
 	 * These can be specified any way the caller likes:
+	 * <pre>
      * - As one big string, like "gridwidth 2 weightx 3.0"
      * - As a list of strings, like "gridwidth 2","weightx 3.0"
      * - As a list of constraint names and values, like
      *   "gridwidth",2,"weightx",3.0
      * - Or any combination of these.
+     * </pre>
 	 */
 	public void add(Component comp, int row, int col, Object...constraints) {
 		GridBagConstraints gbc = copyGBC(defaultConstraints);
@@ -273,11 +284,13 @@ public class Gridder {
 	 * @param comp The component to add.
 	 * @param constraints Any additional constraints to apply to the component.
 	 * These can be specified any way the caller likes:
+	 * <pre>
      * - As one big string, like "gridwidth 2 weightx 3.0"
      * - As a list of strings, like "gridwidth 2","weightx 3.0"
      * - As a list of constraint names and values, like
      *   "gridwidth",2,"weightx",3.0
      * - Or any combination of these.
+     * </pre>
 	 * Note that gridwidth and gridheight constraints will be ignored since
 	 * they are derived from the layout string.
 	 */
@@ -290,6 +303,27 @@ public class Gridder {
 		add(comp,rcwh[0],rcwh[1],constraints);
 	}
 
+	/**
+	 * Get the container managed by this Gridder.
+	 * @return the container.
+	 */
+	public Container getContainer() {
+		return this.container;
+	}
+	
+	/**
+	 * Get the container managed by this Gridder as a JComponent
+	 * instance, if possible. Otherwise, return null.
+	 * @return The container cast to JComponent, or null if the
+	 * container is not a JComponent.
+	 */
+	public JComponent getContainerAsJComponent() {
+		if (container instanceof JComponent) {
+			return (JComponent)container;
+		}
+		return null;
+	}
+	
 	/**
 	 * Update this Gridder's default constraints with the constraints
 	 * given in the constraint list.
@@ -384,9 +418,11 @@ public class Gridder {
 	private void interpretConstraint(String cname,String cval,GridBagConstraints gbc) {
 		switch (cname) {
 		case "gridwidth":
+		case "width":
 			gbc.gridwidth = toInt(cname,cval);
 			break;
 		case "gridheight":
+		case "height":
 			gbc.gridheight = toInt(cname,cval);
 			break;
 		case "weightx":

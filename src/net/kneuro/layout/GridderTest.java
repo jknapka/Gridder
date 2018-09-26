@@ -68,10 +68,10 @@ public class GridderTest {
 		JPanel pnl = new JPanel();
 		pnl.setBorder(BorderFactory.createEtchedBorder());
 		Gridder gr = new Gridder(pnl);
-		gr.add(new JButton("Button 1"), 0,0,"anchor nw weightx 1 weighty 1 fill xy");
-		gr.add(new JButton("Button 2"), 0,1,"anchor ne weightx 1 weighty 1");
-		gr.add(new JButton("Button 3"), 1,0,"anchor","e");
-		gr.add(new JButton("Button 4"), 1,1,"anchor",GridBagConstraints.WEST);
+		gr.add(new JButton("Grow"), 0,0,"anchor nw weightx 1 weighty 1 fill xy");
+		gr.add(new JButton("Float NE"), 0,1,"anchor ne weightx 1 weighty 1");
+		gr.add(new JButton("Stay"), 1,0,"anchor","e");
+		gr.add(new JButton("Together"), 1,1,"anchor",GridBagConstraints.WEST);
 		return pnl;
 	}
 }
