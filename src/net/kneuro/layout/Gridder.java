@@ -59,7 +59,7 @@ import javax.swing.JComponent;
  * future add() calls.
  * <p>
  * In general, all constraint names are the same as the corresponding
- * member names of the GridBagConstaints class. The exception is the
+ * member names of the GridBagConstraints class. The exception is the
  * GridBagConstraints.insets member, which is realized here as
  * separate constraints inset_top, inset_bottom, inset_left, and
  * inset_right.
