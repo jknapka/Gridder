@@ -81,8 +81,8 @@ import javax.swing.JComponent;
  * <pre>
  * GBC.member       Gridder name                Possible values         Default
  * ----------------------------------------------------------------------------
- * gridwidth        gridwidth                   Integer                 1
- * gridheight       gridheight                  Integer                 1
+ * gridwidth        gridwidth,width             Integer                 1
+ * gridheight       gridheight,height           Integer                 1
  * weightx          weightx                     Float                   0.0
  * weighty          weighty                     Float                   0.0
  * anchor           anchor                      center|ctr|c            center
