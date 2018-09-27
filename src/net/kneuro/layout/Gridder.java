@@ -230,11 +230,19 @@ import javax.swing.JComponent;
  * @author jk
  */
 public class Gridder {
-	
+
 	/**
 	 * Construct a Gridder instance.
 	 * @param container The container the Gridder will manage.
 	 * @param constraints Default constraints to apply to added components.
+	 * These can be specified any way the caller likes:
+	 * <pre>
+	 * - As one big string, like "gridwidth 2 weightx 3.0"
+	 * - As a list of strings, like "gridwidth 2","weightx 3.0"
+	 * - As a list of constraint names and values, like
+	 *   "gridwidth",2,"weightx",3.0
+	 * - Or any combination of these.
+	 * </pre>
 	 */
 	public Gridder(Container container,Object... constraints) {
 		super();
@@ -253,12 +261,12 @@ public class Gridder {
 	 * @param constraints Any additional constraints to apply to the component.
 	 * These can be specified any way the caller likes:
 	 * <pre>
-     * - As one big string, like "gridwidth 2 weightx 3.0"
-     * - As a list of strings, like "gridwidth 2","weightx 3.0"
-     * - As a list of constraint names and values, like
-     *   "gridwidth",2,"weightx",3.0
-     * - Or any combination of these.
-     * </pre>
+	 * - As one big string, like "gridwidth 2 weightx 3.0"
+	 * - As a list of strings, like "gridwidth 2","weightx 3.0"
+	 * - As a list of constraint names and values, like
+	 *   "gridwidth",2,"weightx",3.0
+	 * - Or any combination of these.
+	 * </pre>
 	 */
 	public void add(Component comp, int row, int col, Object...constraints) {
 		GridBagConstraints gbc = copyGBC(defaultConstraints);
@@ -276,7 +284,7 @@ public class Gridder {
 	public void parseLayout(String layoutStr) {
 		layout = new LayoutParser(layoutStr);
 	}
-	
+
 	/**
 	 * Add a component whose position and extent will be determined based
 	 * on the last parsed layout string.
@@ -285,12 +293,12 @@ public class Gridder {
 	 * @param constraints Any additional constraints to apply to the component.
 	 * These can be specified any way the caller likes:
 	 * <pre>
-     * - As one big string, like "gridwidth 2 weightx 3.0"
-     * - As a list of strings, like "gridwidth 2","weightx 3.0"
-     * - As a list of constraint names and values, like
-     *   "gridwidth",2,"weightx",3.0
-     * - Or any combination of these.
-     * </pre>
+	 * - As one big string, like "gridwidth 2 weightx 3.0"
+	 * - As a list of strings, like "gridwidth 2","weightx 3.0"
+	 * - As a list of constraint names and values, like
+	 *   "gridwidth",2,"weightx",3.0
+	 * - Or any combination of these.
+	 * </pre>
 	 * Note that gridwidth and gridheight constraints will be ignored since
 	 * they are derived from the layout string.
 	 */
@@ -310,7 +318,7 @@ public class Gridder {
 	public Container getContainer() {
 		return this.container;
 	}
-	
+
 	/**
 	 * Get the container managed by this Gridder as a JComponent
 	 * instance, if possible. Otherwise, return null.
@@ -323,7 +331,7 @@ public class Gridder {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Update this Gridder's default constraints with the constraints
 	 * given in the constraint list.
@@ -332,7 +340,7 @@ public class Gridder {
 	public void updateConstraints(Object...constraints) {
 		parseConstraints(this.defaultConstraints,constraints);
 	}
-	
+
 	/**
 	 * When adding a component based on a layout string, add the necessary
 	 * grid size and weight parameters to the constraints.
@@ -356,7 +364,7 @@ public class Gridder {
 		}
 		return new Object[] {sb.toString()};
 	}
-	
+
 	/**
 	 * Parse a set of constraints and update a GridBagConstraints object.
 	 * @param constraints Logically, a list of constraintName value pairs.
@@ -384,7 +392,7 @@ public class Gridder {
 		}
 		return sb.toString().trim();
 	}
-	
+
 	/**
 	 * Parse a constraint string and update the given GridBagConstraints with
 	 * any constraints specified. Do not change any constraint not explicitly
@@ -586,7 +594,7 @@ public class Gridder {
 			throw new RuntimeException("Bad int constraint value {"+value+"} for constraint "+cname);
 		}
 	}
-	
+
 	/**
 	 * Convert a string to a double value, and throw a RuntimeException
 	 * if this cannot be done.
@@ -601,7 +609,7 @@ public class Gridder {
 			throw new RuntimeException("Bad float constraint value {"+value+"} for constraint "+cname);
 		}
 	}
-	
+
 	/**
 	 * @return a GridBagConstraints filled with default values.
 	 */
@@ -636,7 +644,7 @@ public class Gridder {
 		result.ipady = from.ipady;
 		return result;
 	}
-	
+
 	/**
 	 * Check whether a String array contains a given String,
 	 * using the .equals() test.
