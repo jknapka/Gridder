@@ -1,6 +1,7 @@
 package net.kneuro.layout;
 
 import java.awt.GridBagConstraints;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -28,37 +29,11 @@ public class GridderTest {
 		gr.add("c6", new JLabel("c6: Bottom right label with very long string"), "anchor w");
 		
 		top.pack();
-		top.addWindowListener(new WindowListener() {
-
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-
+		top.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-			}
-			
 		});
 		
 		top.setVisible(true);
