@@ -3,10 +3,17 @@ package net.kneuro.layout;
 import java.awt.GridBagConstraints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
+/**
+ * A class that exercises the functionality of Gridder. Start
+ * this as the main class to see a window laid out using the
+ * 2D layout language example from the Gridder class comment.
+ * 
+ * @author jk
+ *
+ */
 public class GridderTest {
 	public static void main(String[] argv) throws Exception {
 		JFrame top = new JFrame("Gridder test");
