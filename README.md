@@ -140,10 +140,10 @@ For example, here is a somewhat complex layout:
 
 ```
 String layout =
-   "    {c1                 - - c2}    "+
-   "    {c3:wx1,wy2,i*5,fxy - c4 -}    "+
-   "    {|                  . . c5}    "+
-   "    {|                  . c6 -}    ";
+   "    {c1                 + + c2}    "+
+   "    {c3:wx1,wy2,i*5,fxy + c4 +}    "+
+   "    {|                  - - c5}    "+
+   "    {|                  - c6 +}    ";
 
 // We must parse the layout before Gridder can use it.
 gr.parseLayout(layout);
@@ -154,7 +154,7 @@ represents a rectangular array of grid cells and identifies
 the position and extent of each component. This layout says that:
 
 - Component `c1` occupies the first three cells of row 0
-  (`-` means "extend the previous component into this column").
+  (`+` means "extend the previous component into this column").
 - Component `c2` occupies the fourth cell of row 0.
 - Component `c3` occupies the first two cells of row 1, and
   extends two cells downward to row 3 (`|` means "extend
@@ -184,25 +184,25 @@ configured by its own Gridder instance.
 In general, 
 
 - Curly brackets `{` and `}` delimit each grid row;
-- `-` causes the gridwidth of the component to the
+- `+` causes the gridwidth of the component to the
   left to be increased by 1;
 - `|` causes the gridheight of the component *directly*
   above to be increased by 1;
-- The `-` and `|` characters extending down and to the right
+- The `+` and `|` characters extending down and to the right
   from a component denote the extent of that component.
-- `.` simply occupies space. It is used to fill in the
+- `-` simply occupies space. It is used to fill in the
   space occupied by multi-cell components, and to indicate
   empty grid cells.  All grid cells must be
   filled with either a component identifier or
-  one of the characters `.<^|-`;
-- `<` is a synonym for `-` and `^` is a synonym for `|`, for
+  one of the characters `|+<^-`;
+- `<` is a synonym for `+` and `^` is a synonym for `|`, for
   historical compatibility with an earlier version
   of this code.
 - Whitespace within a layout string is ignored except that
    component identifiers such as "c1" are delimited by either
-   whitespace or one of the other layout characters `{.}|^<-`
+   whitespace or one of the other layout characters `{}|+<^-`
 - Component identifiers are strings that contain
-  no whitespace and none of the characters `{}|-^<` .
+  no whitespace and none of the characters `{}|+^<-` .
 - If a component identifier contains a colon, the
   characters following the colon are interpreted as a
   comma-separated list of constraints in the format
@@ -213,7 +213,7 @@ In general,
   component `c1` to `1.0`. Using the short constraint
   names helps to keep a 2D layout compact. If you prefer
   maximally-compact 2D layouts, do not use embedded constraints;
-  instead, override constraints in the add() method as
+  instead, override constraints in the `add()` method as
   described below.
 
 The layout string above is a completely valid example,
@@ -221,7 +221,7 @@ even with the additional whitespace. It could have been
 specified without extra whitespace like this:
 
 ```
-   String layout="{c1--c2}{c3:wx1,wy2,i*5,fxy-c4-}{|..c5}{|.c6-}";
+   String layout="{c1++c2}{c3:wx1,wy2,i*5,fxy+c4+}{|--c5}{|-c6+}";
 ```
 
 but that would defeat the purpose of making the 2D structure

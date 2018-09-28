@@ -22,11 +22,17 @@ public class GridderTest {
 		// c3 component will be a JPanel with its own layout.
 		Gridder gr = new Gridder(top.getContentPane());
 		String layout =
-				 "    {c1                 -   -     c2}    "+
-				 "    {c3:wx1,wy2,i*5,fxy -   c4    - }    "+
-				 "    {|                  .   .     c5}    "+
-				 "    {|                  .   c6    - }    ";
+				 "    {c1                 +   +     c2}    "+
+				 "    {c3:wx1,wy2,i*5,fxy +   c4    - }    "+
+				 "    {|                  -   -     c5}    "+
+				 "    {|                  -   c6    + }    ";
 		gr.parseLayout(layout);
+		
+		String[] cnames = {"c1","c2","c3","c4","c5","c6"};
+		for (String cname: cnames) {
+			LayoutParser.ComponentPosition comp = gr.getLayoutParser().getComponentByName(cname);
+			System.out.println(comp.name+" @ "+comp.row+","+comp.col+" w="+comp.width+" h="+comp.height+" cons="+comp.constraints);
+		}
 		
 		gr.add("c1", new JLabel("c1: Top left"),"anchor w");
 		gr.add("c4", new JLabel("c4: Kinda middle"));

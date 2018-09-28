@@ -131,10 +131,10 @@ import javax.swing.JComponent;
  * For example, here is a somewhat complex layout:
  * <pre>
  * String layout =
- *    "    {c1                 - - c2}    "+
- *    "    {c3:wx1,wy2,i*5,fxy - c4 -}    "+
- *    "    {|                  . . c5}    "+
- *    "    {|                  . c6 -}    ";
+ *    "    {c1                 + + c2}    "+
+ *    "    {c3:wx1,wy2,i*5,fxy + c4 -}    "+
+ *    "    {|                  - - c5}    "+
+ *    "    {|                  - c6 +}    ";
  * gr.parseLayout(layout);
  * </pre>
  * (Whitespace added to layout string for clarity.) Such a string
@@ -143,7 +143,7 @@ import javax.swing.JComponent;
  * <p>
  * <ul>
  * <li> Component c1 occupies the first three cells of row 0
- *   (- means "extend the previous component into this column").
+ *   (+ means "extend the previous component into this column").
  * <li> Component c2 occupies the fourth cell of row 0.
  * <li> Component c3 occupies the first two cells of row 1, and
  *   extends two cells downward to row 3 (| means "extend
@@ -164,18 +164,18 @@ import javax.swing.JComponent;
  * In general, 
  * <ul>
  * <li> Curly brackets { and } delimit each grid row;
- * <li> - causes the gridwidth of the component to the
+ * <li> + causes the gridwidth of the component to the
  *   left to be increased by 1;
  * <li> | causes the gridheight of the component *directly*
  *   above to be increased by 1;
- * <li> . simply occupies space. All grid cells must be
+ * <li> - simply occupies space. All grid cells must be
  *   filled with either a component identifier or
- *   one of the characters .<^|-
- * <li> < is a synonym for - and ^ is a synonym for |, for
+ *   one of the characters |-^<+
+ * <li> < is a synonym for + and ^ is a synonym for |, for
  *   historical compatibility with an earlier version
  *   of this code.
  * <li> Component identifiers are any string that contains
- *   no whitespace and none of the characters {}|-^< .
+ *   no whitespace and none of the characters {}|-^<+
  * <li> If a component identifier contains a colon, the
  *   characters following the colon are interpreted as a
  *   comma-separated list of constraints in the format
@@ -187,7 +187,7 @@ import javax.swing.JComponent;
  *   names helps to keep a 2D layout compact.
  * </ul>
  * <p>
- * The - and | characters extending away from a component
+ * The + and | characters extending down and to the right of a component
  * denote the extent of that component. Dot characters are used
  * to fill in the space occupied by a multi-cell component, and
  * to indicate empty cells. Whitespace within a layout string
@@ -200,7 +200,7 @@ import javax.swing.JComponent;
  * whitespace. It could have been specified without extra
  * whitespace like this:
  * <pre>
- *    String layout="{c1--c2}{c3:wx1,wy2,i*5,fxy-c4-}{|..c5}{|.c6-}";
+ *    String layout="{c1++c2}{c3:wx1,wy2,i*5,fxy+c4+}{|--c5}{|-c6+}";
  * </pre>
  * but that would defeat the purpose of making the 2D structure
  * of the layout clear.
@@ -341,6 +341,7 @@ public class Gridder {
 			augmentedConstraints[0] = embeddedConstraints;
 			System.arraycopy(constraints,0,augmentedConstraints,1,constraints.length);
 			constraints = addGridSizeAndWeightConstraints(cp.width,cp.height,augmentedConstraints);
+			System.out.println(layoutName + " "+constraints[0]);
 			add(comp,cp.row,cp.col,constraints);
 		} else {
 			throw new RuntimeException("No component named "+layoutName+" in layout string.");
@@ -392,10 +393,14 @@ public class Gridder {
 		String[] constraintToks = constraintString.split(" ");
 		sb.append(" gridwidth ").append(gridwidth);
 		sb.append(" gridheight ").append(gridheight);
-		if (!arrayContains("weightx",constraintToks)) {
+		if (!arrayContains("weightx",constraintToks) &&
+				!arrayContains("wx",constraintToks) &&
+				!arrayContains("w*",constraintToks)) {
 			sb.append(" weightx ").append((double)gridwidth/100.0);
 		}
-		if (!arrayContains("weighty",constraintToks)) {
+		if (!arrayContains("weighty",constraintToks) &&
+				!arrayContains("wy",constraintToks) &&
+				!arrayContains("w*",constraintToks)) {
 			sb.append(" weighty ").append((double)gridheight/100.0);
 		}
 		return new Object[] {sb.toString()};
@@ -433,6 +438,9 @@ public class Gridder {
 		return false;
 	}
 
+	// Return the LayoutParser instance. For test and internal use only.
+	LayoutParser getLayoutParser() { return layout; }
+	
 	// The container being managed.
 	private Container container;
 

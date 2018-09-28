@@ -5,7 +5,6 @@
  */
 package net.kneuro.layout;
 
-import java.awt.GridBagConstraints;
 import java.util.LinkedList;
 
 /**
@@ -71,7 +70,7 @@ class LayoutParser {
 				cp = null;
 				++row;
 				break;
-			case ".":
+			case "+":
 				// Just increment the column number.
 				++col;
 				break;
@@ -145,12 +144,12 @@ class LayoutParser {
 				++idx;
 				break;
 			case '<':
-			case '-':
-				result = "-";
+			case '+':
+				result = "+";
 				++idx;
 				break;
-			case '.':
-				result = ".";
+			case '-':
+				result = "-";
 				++idx;
 				break;
 			default:
@@ -188,7 +187,7 @@ class LayoutParser {
 				(c == '<') ||
 				(c == '|') ||
 				(c == '-') ||
-				(c == '.');
+				(c == '+');
 	}
 
 	/**
