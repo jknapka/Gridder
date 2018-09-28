@@ -22,18 +22,18 @@ public class GridderTest {
 		// c3 component will be a JPanel with its own layout.
 		Gridder gr = new Gridder(top.getContentPane());
 		String layout =
-				 "    {c1 - - c2}    "+
-				 "    {c3 - c4 -}    "+
-				 "    {|  . . c5}    "+
-				 "    {|  . c6 -}    ";
+				 "    {c1                 -   -     c2}    "+
+				 "    {c3:wx1,wy2,i*5,fxy -   c4    - }    "+
+				 "    {|                  .   .     c5}    "+
+				 "    {|                  .   c6    - }    ";
 		gr.parseLayout(layout);
 		
-		gr.add("c1", new JLabel("c1: Top left"));
+		gr.add("c1", new JLabel("c1: Top left"),"anchor w");
 		gr.add("c4", new JLabel("c4: Kinda middle"));
 		gr.add("c2", new JButton("c2: Top right"),"anchor e");
-		gr.add("c5", new JCheckBox("c5: Check me"),"anchor e");
-		gr.add("c3", getSubPanel(), "weightx 1.0","weighty",1.0,"fill both");
-		gr.add("c6", new JLabel("c6: Bottom right label with very long string"), "anchor w");
+		gr.add("c5", new JCheckBox("c5: Check me"));
+		gr.add("c3", getSubPanel());
+		gr.add("c6", new JLabel("c6: Bottom right label with very long string"));
 		
 		top.pack();
 		top.addWindowListener(new WindowAdapter() {

@@ -81,33 +81,36 @@ import javax.swing.JComponent;
  * <pre>
  * GBC.member       Gridder name                Possible values         Default
  * ----------------------------------------------------------------------------
- * gridwidth        gridwidth,width             Integer                 1
- * gridheight       gridheight,height           Integer                 1
- * weightx          weightx                     Float                   0.0
- * weighty          weighty                     Float                   0.0
- * anchor           anchor                      center|ctr|c            center
- *                                              north|n|top
- *                                              south|s|bot|bottom
- *                                              east|e|right|r
- *                                              west|w|left|l
- *                                              northeast|ne|topright|tr
- *                                              northwest|nw|topleft|tl
- *                                              southeast|se|bottomright|br
- *                                              southwest|sw|bottomleft|bl
- *                                              Any of the int anchor values
- *                                              defined in GridBagConstraints.
- * fill             fill                        none|neither            none
- *                                              horizontal|h|x
- *                                              vertical|v|y
- *                                              both|all|xy
- *                                              Any of the int fill values
- *                                              defined in GridBagConstraints.
- * ipadx            ipadx                       Integer                 0
- * ipady            ipady                       Integer                 0
- * insets.top       inset_top|insets_top        Integer                 0
- * insets.bottom    inset_bottom|insets_bottom  Integer                 0
- * insets.left      inset_left|insets_left      Integer                 0
- * insets.right     inset_right|insets_right    Integer                 0
+ * gridwidth        gridwidth,width,wd            Integer                 1
+ * gridheight       gridheight,height,ht          Integer                 1
+ * weightx          weightx,wx                    Float                   0.0
+ * weighty          weighty,wy                    Float                   0.0
+ *                  w* means "both weights"
+ * anchor           anchor,a                      center|ctr|c            center
+ *                                                north|n|top
+ *                                                south|s|bot|bottom
+ *                                                east|e|right|r
+ *                                                west|w|left|l
+ *                                                northeast|ne|topright|tr
+ *                                                northwest|nw|topleft|tl
+ *                                                southeast|se|bottomright|br
+ *                                                southwest|sw|bottomleft|bl
+ *                                                Any of the int anchor values
+ *                                                defined in GridBagConstraints.
+ * fill             fill,f                        none|neither            none
+ *                                                horizontal|h|x
+ *                                                vertical|v|y
+ *                                                both|all|xy
+ *                                                Any of the int fill values
+ *                                                defined in GridBagConstraints.
+ * ipadx            ipadx,px                      Integer                 0
+ * ipady            ipady,py                      Integer                 0
+ *                  p* or ipad* means "both paddings"
+ * insets.top       inset_top,insets_top,it       Integer                 0
+ * insets.bottom    inset_bottom|insets_bottom,ib Integer                 0
+ * insets.left      inset_left|insets_left,il     Integer                 0
+ * insets.right     inset_right|insets_right,ir   Integer                 0
+ *                  i* or inset* or insets* means "all insets"
  * gridx            None                        Supplied by the Gridder.add() method.
  * gridy            None                        Supplied by the Gridder.add() method.
  * ----------------------------------------------------------------------------
@@ -124,10 +127,10 @@ import javax.swing.JComponent;
  * For example, here is a somewhat complex layout:
  * <pre>
  * String layout =
- *    "    {c1 - - c2}    "+
- *    "    {c3 - c4 -}    "+
- *    "    {|  . . c5}    "+
- *    "    {|  . c6 -}    ";
+ *    "    {c1                 - - c2}    "+
+ *    "    {c3:wx1,wy2,i*5,fxy - c4 -}    "+
+ *    "    {|                  . . c5}    "+
+ *    "    {|                  . c6 -}    ";
  * gr.parseLayout(layout);
  * </pre>
  * (Whitespace added to layout string for clarity.) Such a string
@@ -140,7 +143,12 @@ import javax.swing.JComponent;
  * <li> Component c2 occupies the fourth cell of row 0.
  * <li> Component c3 occupies the first two cells of row 1, and
  *   extends two cells downward to row 3 (| means "extend
- *   the component directly above into this row").
+ *   the component directly above into this row"). This component
+ *   also contains embedded constraints that will be used to
+ *   override the default constraints supplied to the gridder
+ *   constructor: weightx = 1.0, weighty = 1.0, all inset values
+ *   set to 5, and fill set to xy. The syntax of those constraints
+ *   is described below.
  * <li> Component c4 occupies the third and fourth cells of
  *   row 1.
  * <li> Component c5 occupies the fourth cell of row 2.
@@ -162,6 +170,17 @@ import javax.swing.JComponent;
  * <li> < is a synonym for - and ^ is a synonym for |, for
  *   historical compatibility with an earlier version
  *   of this code.
+ * <li> Component identifiers are any string that contains
+ *   no whitespace and none of the characters {}|-^< .
+ * <li> If a component identifier contains a colon, the
+ *   characters following the colon are interpreted as a
+ *   comma-separated list of constraints in the format
+ *   constraintNameValue, with no space between constraint
+ *   name and value. The constraint names are as described in the
+ *   table above. Thus, "c1:wx1.0" and "c1:weightx1.0" may
+ *   both be used to set the "weightx" constraint of
+ *   component "c1" to 1.0. Using the short constraint
+ *   names helps to keep a 2D layout compact.
  * </ul>
  * <p>
  * The - and | characters extending away from a component
@@ -177,10 +196,12 @@ import javax.swing.JComponent;
  * whitespace. It could have been specified without extra
  * whitespace like this:
  * <pre>
- *    String layout="{c1--c2}{c3-c4-}{|..c5}{|.c6-}";
+ *    String layout="{c1--c2}{c3:wx1,wy2,i*5,fxy-c4-}{|..c5}{|.c6-}";
  * </pre>
  * but that would defeat the purpose of making the 2D structure
  * of the layout clear.
+ * <p>
+ * 
  * <p>
  * To add a component to a container based on the last layout
  * string parsed, use the add(String layoutId,Component comp)
@@ -200,9 +221,12 @@ import javax.swing.JComponent;
  *    JButton btn1(new AbstractAction("Push me") {...});
  *    gr.add("c2", btn1, "weightx 5.0");
  * </pre>
+ * Any constraints specified in the add() method will override
+ * both the default constraints supplied to the Gridder constructor
+ * and any embedded constraints from the layout string.
  * <p>
- * There are two things to remember about constraints when using
- * text-based layouts, however:
+ * There are two more things to remember about constraints when using
+ * text-based layouts:
  * <ol>
  * <li> Any gridwidth or gridheight constraints you supply will
  *    be ignored, since those constraints will be derived from
@@ -250,7 +274,7 @@ public class Gridder {
 		this.layout = null;
 		container.setLayout(new GridBagLayout());
 		this.defaultConstraints = this.getDefaultConstraints();
-		parseConstraints(this.defaultConstraints,constraints);
+		ConstraintParser.parseConstraints(this.defaultConstraints,constraints);
 	}
 
 	/**
@@ -269,8 +293,8 @@ public class Gridder {
 	 * </pre>
 	 */
 	public void add(Component comp, int row, int col, Object...constraints) {
-		GridBagConstraints gbc = copyGBC(defaultConstraints);
-		parseConstraints(gbc, constraints);
+		GridBagConstraints gbc = ConstraintParser.copyGBC(defaultConstraints);
+		ConstraintParser.parseConstraints(gbc, constraints);
 		gbc.gridx = col;
 		gbc.gridy = row;
 		this.container.add(comp,gbc);
@@ -306,9 +330,17 @@ public class Gridder {
 		if (layout == null) {
 			throw new RuntimeException("No layout string has been parsed");
 		}
-		int[] rcwh = layout.getComponentPositionAndSize(layoutName);
-		constraints = addGridSizeAndWeightConstraints(rcwh[2],rcwh[3],constraints);
-		add(comp,rcwh[0],rcwh[1],constraints);
+		LayoutParser.ComponentPosition cp = layout.getComponentByName(layoutName);
+		if (cp != null) {
+			String embeddedConstraints = cp.constraints;
+			Object[] augmentedConstraints = new Object[constraints.length + 1];
+			augmentedConstraints[0] = embeddedConstraints;
+			System.arraycopy(constraints,0,augmentedConstraints,1,constraints.length);
+			constraints = addGridSizeAndWeightConstraints(cp.width,cp.height,augmentedConstraints);
+			add(comp,cp.row,cp.col,constraints);
+		} else {
+			throw new RuntimeException("No component named "+layoutName+" in layout string.");
+		}
 	}
 
 	/**
@@ -338,7 +370,7 @@ public class Gridder {
 	 * @param constraints A list of constraint names and values.
 	 */
 	public void updateConstraints(Object...constraints) {
-		parseConstraints(this.defaultConstraints,constraints);
+		ConstraintParser.parseConstraints(this.defaultConstraints,constraints);
 	}
 
 	/**
@@ -351,7 +383,7 @@ public class Gridder {
 	 * unspecified weight parameters added.
 	 */
 	private Object[] addGridSizeAndWeightConstraints(int gridwidth,int gridheight,Object[] constraints) {
-		String constraintString = buildConstraintString(constraints);
+		String constraintString = ConstraintParser.buildConstraintString(constraints);
 		StringBuilder sb = new StringBuilder(constraintString);
 		String[] constraintToks = constraintString.split(" ");
 		sb.append(" gridwidth ").append(gridwidth);
@@ -366,251 +398,6 @@ public class Gridder {
 	}
 
 	/**
-	 * Parse a set of constraints and update a GridBagConstraints object.
-	 * @param constraints Logically, a list of constraintName value pairs.
-	 * @return A GridBagConstraints object with all constraints filled
-	 * in as specified, and default values for any unspecified constraint.
-	 */
-	private void parseConstraints(GridBagConstraints toUpdate,Object... constraints) {
-		String bigConstraintString = buildConstraintString(constraints);
-		parseStringConstraints(bigConstraintString,toUpdate);
-	}
-
-	/**
-	 * Take an Object[] array and collapse it down to a single String, with
-	 * exactly one space character between adjacent tokens.
-	 * @param constraints A constraint array.
-	 * @return A string containing the same content as the input.
-	 */
-	private String buildConstraintString(Object[] constraints) {
-		StringBuilder sb = new StringBuilder();
-		for (Object obj: constraints) {
-			if (obj != null) {
-				sb.append(' ');
-				sb.append(obj.toString().trim());
-			}
-		}
-		return sb.toString().trim();
-	}
-
-	/**
-	 * Parse a constraint string and update the given GridBagConstraints with
-	 * any constraints specified. Do not change any constraint not explicitly
-	 * specified in the constraints string.
-	 * @param constraints A constraints string containing one or more
-	 * "constraintName value" pairs.
-	 * @param gbc The GridBagConstraints object to update.
-	 */
-	private void parseStringConstraints(String constraints,GridBagConstraints gbc) {
-		if (constraints.length() == 0) return;
-		String[] toks = constraints.split("\\s+");
-		for (int ii=0; ii<toks.length; ii += 2) {
-			String cname = toks[ii];
-			String cval = "";
-			if (ii+1 < toks.length) {
-				cval = toks[ii+1];
-			} else {
-				throw new RuntimeException("Odd number of constraint tokens in {"+constraints+"}");
-			}
-			interpretConstraint(cname,cval,gbc);
-		}
-	}
-
-	/**
-	 * Interpret a single constraint and its value.
-	 * @param cname The constraint name.
-	 * @param cval The constraint value.
-	 * @param gbc The GridBagConstraint object to update.
-	 * @throws RuntimeException if the constraint cannot be interpreted.
-	 */
-	private void interpretConstraint(String cname,String cval,GridBagConstraints gbc) {
-		switch (cname) {
-		case "gridwidth":
-		case "width":
-			gbc.gridwidth = toInt(cname,cval);
-			break;
-		case "gridheight":
-		case "height":
-			gbc.gridheight = toInt(cname,cval);
-			break;
-		case "weightx":
-			gbc.weightx = toDouble(cname,cval);
-			break;
-		case "weighty":
-			gbc.weighty = toDouble(cname,cval);
-			break;
-		case "anchor":
-			gbc.anchor = toAnchorValue(cval);
-			break;
-		case "fill":
-			gbc.fill = toFillValue(cval);
-			break;
-		case "ipadx":
-			gbc.ipadx = toInt(cname,cval);
-			break;
-		case "ipady":
-			gbc.ipady = toInt(cname,cval);
-			break;
-		case "inset_top":
-		case "insets_top":
-			// Note: we know gbc.insets is non-null because we create all
-			// GBC objects that this code will see.
-			gbc.insets.top = toInt(cname,cval);
-			break;
-		case "inset_bottom":
-		case "insets_bottom":
-			gbc.insets.bottom = toInt(cname,cval);
-			break;
-		case "inset_left":
-		case "insets_left":
-			gbc.insets.left = toInt(cname,cval);
-			break;
-		case "inset_right":
-		case "insets_right":
-			gbc.insets.right = toInt(cname,cval);
-			break;
-		default:
-			throw new RuntimeException("Unknown constraint: "+cname);
-		}
-	}
-
-	/**
-	 * Convert a string to the corresponding GBC.anchor value. Integers
-	 * will be returned unchanged.
-	 * @param value The string to interpret.
-	 * @return The corresponding GridBagConstraints.anchor value.
-	 */
-	private int toAnchorValue(String value) {
-		// First, see if it's just an integer, in which case,
-		// return its value. In this case we simply assume the
-		// supplied value is one of the GridBagConstraints constants.
-		try {
-			int ival = Integer.parseInt(value);
-			return ival;
-		} catch (NumberFormatException ex) {
-			// Nothing to do.
-		}
-		// Not an integer, so interpret the string.
-		switch (value) {
-		case "center":
-		case "ctr":
-		case "c":
-			return GridBagConstraints.CENTER;
-		case "north":
-		case "n":
-		case "top":
-			return GridBagConstraints.NORTH;
-		case "south":
-		case "s":
-		case "bottom":
-		case "bot":
-			return GridBagConstraints.SOUTH;
-		case "east":
-		case "e":
-		case "right":
-		case "r":
-			return GridBagConstraints.EAST;
-		case "west":
-		case "w":
-		case "left":
-		case "l":
-			return GridBagConstraints.WEST;
-		case "northeast":
-		case "ne":
-		case "topright":
-		case "tr":
-			return GridBagConstraints.NORTHEAST;
-		case "northwest":
-		case "nw":
-		case "topleft":
-		case "tl":
-			return GridBagConstraints.NORTHWEST;
-		case "southeast":
-		case "se":
-		case "bottomright":
-		case "br":
-			return GridBagConstraints.SOUTHEAST;
-		case "southwest":
-		case "sw":
-		case "bottomleft":
-		case "bl":
-			return GridBagConstraints.SOUTHWEST;
-		default:
-			throw new RuntimeException("Unknown anchor value {"+value+"}");
-		}
-	}
-
-	/**
-	 * Convert a string to a GridBagConstraints.fill value. Integers
-	 * will be returned unchanged.
-	 * @param value The value to interpret.
-	 * @return The corresponding GBC.fill value.
-	 * @throws RuntimeException if the value cannot be interpreted.
-	 */
-	private int toFillValue(String value) {
-		// First, see if it's just an integer, in which case,
-		// return its value. In this case we simply assume the
-		// supplied value is one of the GridBagConstraints constants.
-		try {
-			int ival = Integer.parseInt(value);
-			return ival;
-		} catch (NumberFormatException ex) {
-			// Nothing to do.
-		}
-		// Not an integer, so interpret the string.
-		switch (value) {
-		case "none":
-		case "neither":
-		case "n":
-			return GridBagConstraints.NONE;
-		case "horizontal":
-		case "h":
-		case "x":
-			return GridBagConstraints.HORIZONTAL;
-		case "vertical":
-		case "v":
-		case "y":
-			return GridBagConstraints.VERTICAL;
-		case "both":
-		case "all":
-		case "xy":
-			return GridBagConstraints.BOTH;
-		default:
-			throw new RuntimeException("Unknown fill value {"+value+"}");
-		}		
-	}
-
-	/**
-	 * Convert a string to an integer value, and throw a RuntimeException
-	 * if this cannot be done.
-	 * @param value The string to convert.
-	 * @return The corresponding integer value.
-	 * @throws RuntimeException if conversion fails.
-	 */
-	private int toInt(String cname,String value) {
-		try {
-			return Integer.parseInt(value);
-		} catch (NumberFormatException ex) {
-			throw new RuntimeException("Bad int constraint value {"+value+"} for constraint "+cname);
-		}
-	}
-
-	/**
-	 * Convert a string to a double value, and throw a RuntimeException
-	 * if this cannot be done.
-	 * @param value The string to convert.
-	 * @return The corresponding double value.
-	 * @throws RuntimeException if conversion fails.
-	 */
-	private double toDouble(String cname,String value) {
-		try {
-			return Double.parseDouble(value);
-		} catch (NumberFormatException ex) {
-			throw new RuntimeException("Bad float constraint value {"+value+"} for constraint "+cname);
-		}
-	}
-
-	/**
 	 * @return a GridBagConstraints filled with default values.
 	 */
 	private GridBagConstraints getDefaultConstraints() {
@@ -621,28 +408,6 @@ public class Gridder {
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 0),
 				0, 0);
-	}
-
-	/**
-	 * Copy a GridBagConstraints object.
-	 * @param from The GBC to copy.
-	 * @return A new GBC initialized from the given one.
-	 */
-	private GridBagConstraints copyGBC(GridBagConstraints from) {
-		GridBagConstraints result = new GridBagConstraints();
-		result.insets = new Insets(from.insets.top,from.insets.left,
-				from.insets.bottom,from.insets.right);
-		result.gridx = from.gridx;
-		result.gridy = from.gridy;
-		result.gridwidth = from.gridwidth;
-		result.gridheight = from.gridheight;
-		result.weightx = from.weightx;
-		result.weighty = from.weighty;
-		result.fill = from.fill;
-		result.anchor = from.anchor;
-		result.ipadx = from.ipadx;
-		result.ipady = from.ipady;
-		return result;
 	}
 
 	/**

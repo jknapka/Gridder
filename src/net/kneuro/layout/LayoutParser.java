@@ -5,6 +5,7 @@
  */
 package net.kneuro.layout;
 
+import java.awt.GridBagConstraints;
 import java.util.LinkedList;
 
 /**
@@ -33,13 +34,13 @@ class LayoutParser {
 	 * grid width, and grid height of the component, or null
 	 * if the component was not found.
 	 */
-	int[] getComponentPositionAndSize(String cname) {
+	ComponentPosition getComponentByName(String cname) {
 		if (cname == null) {
 			throw new IllegalArgumentException("cname cannot be null");
 		}
 		for (ComponentPosition cp: components) {
 			if (cname.equals(cp.name)) {
-				return new int[] {cp.row,cp.col,cp.width,cp.height};
+				return cp;
 			}
 		}
 		return null;
@@ -94,6 +95,13 @@ class LayoutParser {
 			default:
 				// It's an identifier. Create a new component.
 				cp = new ComponentPosition();
+				if (tok.contains(":")) {
+					String constraintStr = ConstraintParser.parseConstraintsFromIdentifier(tok);
+					cp.constraints = constraintStr;
+					tok = tok.split(":")[0];
+				} else {
+					cp.constraints = "";
+				}
 				cp.name = tok;
 				cp.col = col;
 				cp.row = row;
@@ -202,12 +210,13 @@ class LayoutParser {
 	}
 
 	// A structure to hold component positioning information.
-	private static class ComponentPosition {
+	static class ComponentPosition {
 		String name;
 		int row;
 		int col;
 		int width;
 		int height;
+		String constraints;
 	}
 
 	// A list of component positions parsed from a layout string.
