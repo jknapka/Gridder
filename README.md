@@ -58,17 +58,21 @@ after the column number.
 
 You can also call `gr.updateConstraints("constraint1 value1 ...")` to
 update the default constraints, which will then be used for all
-future `add()` calls.
+future `add()` calls. The constraints may be specified as for the
+Gridder constructor.
 
 In general, all constraint names are the same as the corresponding
 member names of the GridBagConstraints class. The exception is the
 GridBagConstraints.insets member, which is realized here as
 separate constraints `inset_top`, `inset_bottom`, `inset_left`, and
-`inset_right`.
+`inset_right`. Also, short constraint name abbreviations are
+supported, as are wildcard constraints such as `weight*` to set
+both `weightx` and `weighty` with a single constraint specifier.
 
 Constraint values can be specified as either raw values of the
 appropriate type, or as strings that can be converted to the
-appropriate type.
+appropriate type. Gridder also supports many synonyms for the
+various anchor and fill constraints (see the table below).
 
 Unrecognized constraints or constraints with invalid
 values cause a RuntimeException. Since the expected usage of
@@ -83,34 +87,40 @@ when text-based layouts are used - see below).
 
 |GBC.member     | Gridder name              | Possible values                |  Default
 |---------------|---------------------------|--------------------------------|----------
-|gridwidth      | gridwidth,width           | Integer                        |  1
-|gridheight     | gridheight,height         | Integer                        |  1
-|weightx        | weightx                   | Float                          |  0.0
-|weighty        | weighty                   | Float                          |  0.0
-|anchor         | anchor                    | center,ctr,c                   |  center
-|               |                           | north,n,top                    |
-|               |                           | south,s,bot,bottom             |
-|               |                           | east,e,right,r                 |
-|               |                           | west,w,left,l                  |
-|               |                           | northeast,ne,topright,tr       |
-|               |                           | northwest,nw,topleft,tl        |
-|               |                           | southeast,se,bottomright,br    |
-|               |                           | southwest,sw,bottomleft,bl     |
+|gridwidth      | gridwidth, width          | Integer                        |  1
+|gridheight     | gridheight, height        | Integer                        |  1
+|weightx        | weightx, wx               | Float                          |  0.0
+|weighty        | weighty, wy               | Float                          |  0.0
+|               | weight*, w* mean "both weights"|                           |
+|anchor         | anchor                    | center, ctr, c                 |  center
+|               |                           | north, n, top                  |
+|               |                           | south, s, bot, bottom          |
+|               |                           | east, e, right, r              |
+|               |                           | west, w, left, l               |
+|               |                           | northeast, ne, topright, tr    |
+|               |                           | northwest, nw, topleft, tl     |
+|               |                           | southeast, se, bottomright, br |
+|               |                           | southwest, sw, bottomleft, bl  |
 |               |                           | Any of the int anchor values defined in GridBagConstraints  |
-|fill           | fill                      | none,neither                   |  none
-|               |                           | horizontal,h,x                 |
-|               |                           | vertical,v,y                   |
-|               |                           | both,all,xy                    |
+|fill           | fill                      | none, neither                  |  none
+|               |                           | horizontal, h, x               |
+|               |                           | vertical, v, y                 |
+|               |                           | both, all, xy, yx, hv, vh      |
 |               |                           | Any of the int fill values defined in GridBagConstraints    |
-|ipadx          | ipadx                     | Integer                        |  0
-|ipady          | ipady                     | Integer                        |  0
-|insets.top     | inset_top,insets_top      | Integer                        |  0
-|insets.bottom  | inset_bottom,insets_bottom| Integer                        |  0
-|insets.left    | inset_left,insets_left    | Integer                        |  0
-|insets.right   | inset_right,insets_right  | Integer                        |  0
+|ipadx          | ipadx, px                 | Integer                        |  0
+|ipady          | ipady, py                 | Integer                        |  0
+|               | ipad*, p* mean "both paddings"|                            |
+|insets.top     | inset_top, insets_top, it | Integer                        |  0
+|insets.bottom  | inset_bottom, insets_bottom, ib| Integer                   |  0
+|insets.left    | inset_left, insets_left, il| Integer                       |  0
+|insets.right   | inset_right, insets_right, ir| Integer                     |  0
+|               | i*, inset*, insets* mean "all insets"|                     |
 |gridx          | None                      | Supplied by the Gridder.add() method. |
 |gridy          | None                      | Supplied by the Gridder.add() method. |
 ----------------------------------------------------------------------------
+
+Constraint names and values are _case insensitive_, so `"ANCHOR NW"` is
+a valid constraint.
 
 ## Text-Based Layouts
 
@@ -130,10 +140,10 @@ For example, here is a somewhat complex layout:
 
 ```
 String layout =
-   "    {c1 - - c2}    "+
-   "    {c3 - c4 -}    "+
-   "    {|  . . c5}    "+
-   "    {|  . c6 -}    ";
+   "    {c1                 - - c2}    "+
+   "    {c3:wx1,wy2,i*5,fxy - c4 -}    "+
+   "    {|                  . . c5}    "+
+   "    {|                  . c6 -}    ";
 
 // We must parse the layout before Gridder can use it.
 gr.parseLayout(layout);
@@ -148,7 +158,10 @@ the position and extent of each component. This layout says that:
 - Component `c2` occupies the fourth cell of row 0.
 - Component `c3` occupies the first two cells of row 1, and
   extends two cells downward to row 3 (`|` means "extend
-  the component directly above into this row").
+  the component directly above into this row"). The
+  text following the colon specifies component-specific
+  constraints that override the default constraints: `weightx=1`,
+  `weighty=2`, all `insets.*=5`, and `fill=xy`.
 - Component `c4` occupies the third and fourth cells of
   row 1.
 - Component `c5` occupies the fourth cell of row 2.
@@ -175,28 +188,40 @@ In general,
   left to be increased by 1;
 - `|` causes the gridheight of the component *directly*
   above to be increased by 1;
-- `.` simply occupies space. All grid cells must be
+- The `-` and `|` characters extending down and to the right
+  from a component denote the extent of that component.
+- `.` simply occupies space. It is used to fill in the
+  space occupied by multi-cell components, and to indicate
+  empty grid cells.  All grid cells must be
   filled with either a component identifier or
   one of the characters `.<^|-`;
 - `<` is a synonym for `-` and `^` is a synonym for `|`, for
   historical compatibility with an earlier version
   of this code.
+- Whitespace within a layout string is ignored except that
+   component identifiers such as "c1" are delimited by either
+   whitespace or one of the other layout characters `{.}|^<-`
+- Component identifiers are strings that contain
+  no whitespace and none of the characters `{}|-^<` .
+- If a component identifier contains a colon, the
+  characters following the colon are interpreted as a
+  comma-separated list of constraints in the format
+  `constraintNameValue`, with no space between constraint
+  name and value. The constraint names are as described in the
+  table above. Thus, `c1:wx1.0` and `c1:weightx1.0` may
+  both be used to set the `weightx` constraint of
+  component `c1` to `1.0`. Using the short constraint
+  names helps to keep a 2D layout compact. If you prefer
+  maximally-compact 2D layouts, do not use embedded constraints;
+  instead, override constraints in the add() method as
+  described below.
 
-The `-` and `|` characters extending away from a component
-denote the extent of that component. Dot characters are used
-to fill in the space occupied by a multi-cell component, and
-to indicate empty cells. Whitespace within a layout string
-is ignored except that component identifiers such as "c1"
-are delimited by either whitespace or one of the other
-layout characters `{.}|^<-` . Component identifiers can be
-any string that does not contain any whitespace or any
-of the layout characters. The layout string above is
-a completely valid example, even with the additional
-whitespace. It could have been specified without extra
-whitespace like this:
+The layout string above is a completely valid example,
+even with the additional whitespace. It could have been 
+specified without extra whitespace like this:
 
 ```
-   String layout="{c1--c2}{c3-c4-}{|..c5}{|.c6-}";
+   String layout="{c1--c2}{c3:wx1,wy2,i*5,fxy-c4-}{|..c5}{|.c6-}";
 ```
 
 but that would defeat the purpose of making the 2D structure
@@ -212,7 +237,7 @@ laid out in a nonsensical manner. So don't do that.
 
 To add a component to a container based on the last layout
 string parsed, use the `add(String layoutId,Component comp)`
-method, and set the layoutId to a component identifier from
+method, and set the `layoutId` to a component identifier from
 the layout string. For example,
 
 ```
@@ -231,15 +256,19 @@ constraints:
    JButton btn1(new AbstractAction("Push me") {...}));
    gr.add("c2", btn1, "weightx 5.0");
 ```
+Constraints specified in the add() method will override both
+the default constraints supplied to the Gridder constructor
+*and* any embedded constraints from the layout string.
 
-There are two things to remember about constraints when using
-text-based layouts, however:
+There are two more things to remember about constraints when using
+text-based layouts:
 
 1. Any `gridwidth` or `gridheight` constraints you supply will
    be ignored, since those constraints will be derived from
    the layout string.
 2. If you do not explicitly supply `weightx` and `weighty`
-   constraints in the `add()` method, those constraints will be set to 1/100 of
+   constraints in the `add()` method or as embedded constraints, 
+   those constraints will be set to 1/100 of
    the gridwidth and gridheight of the component, respectively.
    The default `weightx` and `weighty` constraints supplied to
    the Gridder constructor are ignored.

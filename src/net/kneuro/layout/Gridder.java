@@ -114,6 +114,10 @@ import javax.swing.JComponent;
  * gridx            None                        Supplied by the Gridder.add() method.
  * gridy            None                        Supplied by the Gridder.add() method.
  * ----------------------------------------------------------------------------
+ * 
+ * Constraint names and values are _case insensitive_, so `"ANCHOR NW"` is
+ * a valid constraint.
+ * 
  * </pre>
  * <p>
  * TEXT-BASED LAYOUTS

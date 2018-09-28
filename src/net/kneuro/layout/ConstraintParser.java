@@ -97,6 +97,8 @@ public class ConstraintParser {
 	 * @throws RuntimeException if the constraint cannot be interpreted.
 	 */
 	static void interpretConstraint(String cname,String cval,GridBagConstraints gbc) {
+		cname = cname.toLowerCase();
+		cval = cval.toLowerCase();
 		switch (cname) {
 		case "gridwidth":
 		case "width":
@@ -276,6 +278,9 @@ public class ConstraintParser {
 		case "both":
 		case "all":
 		case "xy":
+		case "yx":
+		case "hv":
+		case "vh":
 			return GridBagConstraints.BOTH;
 		default:
 			throw new RuntimeException("Unknown fill value {"+value+"}");
