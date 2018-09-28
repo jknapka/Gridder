@@ -70,12 +70,12 @@ class LayoutParser {
 				cp = null;
 				++row;
 				break;
-			case "+":
+			case "-":
 				// Just increment the column number.
 				++col;
 				break;
 			case "<":
-			case "-":
+			case "+":
 				// Extend component rightward.
 				if (cp != null) {
 					++cp.width;
