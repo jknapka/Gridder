@@ -1,4 +1,4 @@
-# Gridder, a convenient interface to GridBagLayout
+# Gridder: Never Deal With GridBagConstraints Again
 
 The Gridder class makes Swing's GridBagLayout easier, even a pleasure,
 to use. It provides an interface to GridBagLayout that resembles
