@@ -14,6 +14,8 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 
 /**
+ * <h1>Gridder: Never Deal With GridBagConstraints Again</h1>
+ * 
  * This class makes Swing's GridBagLayout easier, even a pleasure,
  * to use. It provides an interface to GridBagLayout that resembles
  * that of the Tcl/Tk grid layout manager. It also provides a text-
@@ -25,9 +27,9 @@ import javax.swing.JComponent;
  * GridBagConstraints. It does not perform any layout management
  * itself, it is just a convenient way to specify layout
  * information to GridBagLayout.
- * <p>
- * BASIC USAGE
- * <p>
+ * 
+ * <h2>Basic Usage</h2>
+ * 
  * To use Gridder, create a Gridder instance and give it the container
  * you want it to manage, as well as any default constraints as a
  * simple string of "constraintName value" pairs (or as multiple
@@ -119,15 +121,17 @@ import javax.swing.JComponent;
  * a valid constraint.
  * 
  * </pre>
- * <p>
- * TEXT-BASED LAYOUTS
- * <p>
+ *
+ * <h2>2D Text-Based Layouts</h2>
+ * 
  * The other, and sometimes more convenient way to use Gridder is
  * to parse a textual layout string, and then add components to the
  * container using identifiers mentioned in the layout string. 
  * You should either use a text-based layout or the plain
  * add(Component,row,column) API for any given container, not both.
- * <p>
+ * 
+ * <h3>The 2D Layout Language</h3>
+ * 
  * For example, here is a somewhat complex layout:
  * <pre>
  * String layout =
@@ -140,7 +144,6 @@ import javax.swing.JComponent;
  * (Whitespace added to layout string for clarity.) Such a string
  * represents a rectangular array of grid cells and identifies
  * the position and extent of each component. This layout says that:
- * <p>
  * <ul>
  * <li> Component c1 occupies the first three cells of row 0
  *   (+ means "extend the previous component into this column").
@@ -170,12 +173,12 @@ import javax.swing.JComponent;
  *   above to be increased by 1;
  * <li> - simply occupies space. All grid cells must be
  *   filled with either a component identifier or
- *   one of the characters |-^<+
- * <li> < is a synonym for + and ^ is a synonym for |, for
+ *   one of the characters |-^&lt;+
+ * <li> &lt; is a synonym for + and ^ is a synonym for |, for
  *   historical compatibility with an earlier version
  *   of this code.
  * <li> Component identifiers are any string that contains
- *   no whitespace and none of the characters {}|-^<+
+ *   no whitespace and none of the characters {}|-^&lt;+
  * <li> If a component identifier contains a colon, the
  *   characters following the colon are interpreted as a
  *   comma-separated list of constraints in the format
@@ -193,7 +196,7 @@ import javax.swing.JComponent;
  * to indicate empty cells. Whitespace within a layout string
  * is ignored except that component identifiers such as "c1"
  * are delimited by either whitespace or one of the other
- * layout characters {.}|^<- . Layout identifiers can be
+ * layout characters {.}|^&lt;- . Layout identifiers can be
  * any string that does not contain any whitespace or any
  * of the layout characters. The layout string above is
  * a completely valid example, even with the additional
@@ -204,9 +207,9 @@ import javax.swing.JComponent;
  * </pre>
  * but that would defeat the purpose of making the 2D structure
  * of the layout clear.
- * <p>
- * 
- * <p>
+ *
+ * <h3>Adding Components to a Text-Based Layout</h3>
+ *
  * To add a component to a container based on the last layout
  * string parsed, use the add(String layoutId,Component comp)
  * method, and set the layoutId to a layout identifier from
@@ -247,7 +250,7 @@ import javax.swing.JComponent;
  *    that need them, provided you use explicit weights that
  *    are large relative to the gridsize/100 values assigned
  *    to other components by default. I advise using explicit
- *    weights with ranges >= 1.0.
+ *    weights with ranges &gt;= 1.0.
  * </ol>
  * <p>
  * It is, of course, possible to write a nonsensical layout
