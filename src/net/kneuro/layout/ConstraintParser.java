@@ -14,7 +14,7 @@ import java.awt.Insets;
  * @author jk
  *
  */
-public class ConstraintParser {
+class ConstraintParser {
 
 	/**
 	 * Copy a GridBagConstraints object.
