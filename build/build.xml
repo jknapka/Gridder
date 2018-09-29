@@ -13,6 +13,7 @@
         <javac srcdir="src" destdir="target" debug="true"
             classpathref="build.classpath"/>
         <jar jarfile="gridder.jar" basedir="target" includes="**/*.class" excludes="**/GridderTest*.class"/>
+    	<javadoc sourcepath="src" destdir="doc"/>
     </target>
 
 </project>
