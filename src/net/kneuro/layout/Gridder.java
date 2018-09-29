@@ -36,6 +36,7 @@ import javax.swing.JComponent;
  * strings of such values, or as constraint names followed by their
  * string, integer, or floating-point values, since the final argument
  * to Gridder() is a varargs array).
+ * <br><br> 
  * <pre>
  *    JFrame topLevel = new JFrame();
  *    Gridder gr = new Gridder(topLevel.getContentPane(),
@@ -43,19 +44,24 @@ import javax.swing.JComponent;
  *    		"inset_top 5", "inset_bottom", 5,
  *          "anchor center","fill","xy");
  * </pre>
+ * 
  * You can then add components via the Gridder object, which handles
  * all the nastiness of setting up the GridBagConstraints.
+ * <br><br> 
  * <pre>
  *    // Uses the default constraints, places label at row 0, column 2.
  *    gr.add(new JLabel("Name:"),0,2);
  * </pre>
+ * 
  * For any individual component, you can override the default constraints
  * in the add() method (which does not change the defaults). Constraints
  * are specified exactly as they are to the Gridder constructor.
+ * <br><br>
  * <pre>
  *    JTextField nameFld = new JTextField();
  *    gr.add(nameFld,0,3,"weightx", 4.0,"fill horizontal");
  * </pre>
+ * 
  * You can also call gr.updateConstraints("constraint1 value1 ...") to
  * update the default constraints, which will then be used for all
  * future add() calls.
@@ -64,7 +70,9 @@ import javax.swing.JComponent;
  * member names of the GridBagConstraints class. The exception is the
  * GridBagConstraints.insets member, which is realized here as
  * separate constraints inset_top, inset_bottom, inset_left, and
- * inset_right.
+ * inset_right. Gridder also supports constraint name abbreviations,
+ * as well as many alternative values for the anchor and fill
+ * constraints (see the table below).
  * <p>
  * Constraint values can be specified as either raw values of the
  * appropriate type, or as strings that can be converted to the
@@ -80,48 +88,74 @@ import javax.swing.JComponent;
  * Gridder constructor or the add() method) are summarized in the
  * following table (note that the defaults for weights are different
  * when text-based layouts are used - see below).
+ * <br><br>
  * <pre>
- * GBC.member       Gridder name                Possible values         Default
+ * <b>GBC.member    Gridder name                  Possible values         Default</b>
  * ----------------------------------------------------------------------------
  * gridwidth        gridwidth,width,wd            Integer                 1
+ * ----------------------------------------------------------------------------
  * gridheight       gridheight,height,ht          Integer                 1
+ * ----------------------------------------------------------------------------
  * weightx          weightx,wx                    Float                   0.0
+ * ----------------------------------------------------------------------------
  * weighty          weighty,wy                    Float                   0.0
- *                  w* means "both weights"
- * anchor           anchor,a                      center|ctr|c            center
- *                                                north|n|top
- *                                                south|s|bot|bottom
- *                                                east|e|right|r
- *                                                west|w|left|l
- *                                                northeast|ne|topright|tr
- *                                                northwest|nw|topleft|tl
- *                                                southeast|se|bottomright|br
- *                                                southwest|sw|bottomleft|bl
- *                                                Any of the int anchor values
- *                                                defined in GridBagConstraints.
- * fill             fill,f                        none|neither            none
- *                                                horizontal|h|x
- *                                                vertical|v|y
- *                                                both|all|xy
- *                                                Any of the int fill values
- *                                                defined in GridBagConstraints.
+ * ----------------------------------------------------------------------------
+ *                  w* and weight* mean           Float
+ *                 "both weights"
+ * ----------------------------------------------------------------------------
+ * anchor           anchor,a                      center, ctr, c          center
+ *                                                north, n, top
+ *                                                south, s, bot, bottom
+ *                                                east, e, right, r
+ *                                                west, w, left, l
+ *                                                northeast, ne, 
+ *                                                topright, tr
+ *                                                northwest, nw, 
+ *                                                topleft, tl
+ *                                                southeast, se, 
+ *                                                bottomright, br
+ *                                                southwest, sw, 
+ *                                                bottomleft, bl
+ *                                                Any of the int anchor
+ *                                                values defined in
+ *                                                GridBagConstraints.
+ * ----------------------------------------------------------------------------
+ * fill             fill,f                        none, neither            none
+ *                                                horizontal, h, x
+ *                                                vertical, v, y
+ *                                                both, all, xy, yx
+ *                                                hv, vh
+ *                                                Any of the int fill 
+ *                                                values defined in 
+ *                                                GridBagConstraints.
+ * ----------------------------------------------------------------------------
  * ipadx            ipadx,px                      Integer                 0
+ * ----------------------------------------------------------------------------
  * ipady            ipady,py                      Integer                 0
- *                  p* or ipad* means "both paddings"
+ * ----------------------------------------------------------------------------
+ *                  p* or ipad* mean              Integer 
+ *                  "both paddings"
+ * ----------------------------------------------------------------------------
  * insets.top       inset_top,insets_top,it       Integer                 0
- * insets.bottom    inset_bottom|insets_bottom,ib Integer                 0
- * insets.left      inset_left|insets_left,il     Integer                 0
- * insets.right     inset_right|insets_right,ir   Integer                 0
- *                  i* or inset* or insets* means "all insets"
+ * ----------------------------------------------------------------------------
+ * insets.bottom    inset_bottom,insets_bottom,ib Integer                 0
+ * ----------------------------------------------------------------------------
+ * insets.left      inset_left,insets_left,il     Integer                 0
+ * ----------------------------------------------------------------------------
+ * insets.right     inset_right,insets_right,ir   Integer                 0
+ * ----------------------------------------------------------------------------
+ *                  i* or inset* or insets*       Integer
+ *                  mean "all insets"
+ * ----------------------------------------------------------------------------
  * gridx            None                        Supplied by the Gridder.add() method.
+ * ----------------------------------------------------------------------------
  * gridy            None                        Supplied by the Gridder.add() method.
  * ----------------------------------------------------------------------------
- * 
- * Constraint names and values are _case insensitive_, so `"ANCHOR NW"` is
- * a valid constraint.
- * 
  * </pre>
  *
+ * Constraint names and values are <em>case insensitive</em>, so "ANCHOR NW" is
+ * a valid constraint.
+ * 
  * <h2>2D Text-Based Layouts</h2>
  * 
  * The other, and sometimes more convenient way to use Gridder is
@@ -133,6 +167,7 @@ import javax.swing.JComponent;
  * <h3>The 2D Layout Language</h3>
  * 
  * For example, here is a somewhat complex layout:
+ * <br><br>
  * <pre>
  * String layout =
  *    "    {c1                 + + c2}    "+
@@ -141,9 +176,11 @@ import javax.swing.JComponent;
  *    "    {|                  - c6 +}    ";
  * gr.parseLayout(layout);
  * </pre>
+ * 
  * (Whitespace added to layout string for clarity.) Such a string
  * represents a rectangular array of grid cells and identifies
  * the position and extent of each component. This layout says that:
+ * 
  * <ul>
  * <li> Component c1 occupies the first three cells of row 0
  *   (+ means "extend the previous component into this column").
@@ -164,19 +201,27 @@ import javax.swing.JComponent;
  * <li> The cell at row 2, column 2 is empty.
  * </ul>
  * <p>
+ * 
  * In general, 
+ * 
  * <ul>
- * <li> Curly brackets { and } delimit each grid row;
+ * <li> Curly brackets { and } delimit each grid row
  * <li> + causes the gridwidth of the component to the
- *   left to be increased by 1;
+ *   left to be increased by 1
  * <li> | causes the gridheight of the component *directly*
- *   above to be increased by 1;
- * <li> - simply occupies space. All grid cells must be
- *   filled with either a component identifier or
+ *   above to be increased by 1
+ * <li> The + and | characters extending down and to the right of a component
+ * denote the extent of that component
+ * <li> - simply occupies space. It is used to fill in the space
+ *   occupied by multi-cell components, and to fill empty cells.
+ *   All grid cells must be filled with either a component identifier or
  *   one of the characters |-^&lt;+
  * <li> &lt; is a synonym for + and ^ is a synonym for |, for
  *   historical compatibility with an earlier version
- *   of this code.
+ *   of this code
+ * <li> Whitespace within a layout string is ignored except that
+ *   component identifiers such as "c1" are delimited by either
+ *   whitespace or one of the other layout characters {}|-^&lt;+
  * <li> Component identifiers are any string that contains
  *   no whitespace and none of the characters {}|-^&lt;+
  * <li> If a component identifier contains a colon, the
@@ -187,24 +232,20 @@ import javax.swing.JComponent;
  *   table above. Thus, "c1:wx1.0" and "c1:weightx1.0" may
  *   both be used to set the "weightx" constraint of
  *   component "c1" to 1.0. Using the short constraint
- *   names helps to keep a 2D layout compact.
+ *   names helps to keep a 2D layout compact. If you prefer
+ *   maximally-compact 2D layouts, do not use embedded
+ *   constraints; instead, specify override constraints in
+ *   the add() method as described below.
  * </ul>
  * <p>
- * The + and | characters extending down and to the right of a component
- * denote the extent of that component. Dot characters are used
- * to fill in the space occupied by a multi-cell component, and
- * to indicate empty cells. Whitespace within a layout string
- * is ignored except that component identifiers such as "c1"
- * are delimited by either whitespace or one of the other
- * layout characters {.}|^&lt;- . Layout identifiers can be
- * any string that does not contain any whitespace or any
- * of the layout characters. The layout string above is
- * a completely valid example, even with the additional
- * whitespace. It could have been specified without extra
- * whitespace like this:
+ * The layout string above is a completely valid example, even
+ * with the additional whitespace. It could have been specified
+ * without extra whitespace like this:
+ * <br><br>
  * <pre>
  *    String layout="{c1++c2}{c3:wx1,wy2,i*5,fxy+c4+}{|--c5}{|-c6+}";
  * </pre>
+ * 
  * but that would defeat the purpose of making the 2D structure
  * of the layout clear.
  *
@@ -214,9 +255,11 @@ import javax.swing.JComponent;
  * string parsed, use the add(String layoutId,Component comp)
  * method, and set the layoutId to a layout identifier from
  * the layout string. For example,
+ * <br><br>
  * <pre>
  *    gr.add("c1",new JLabel("Top left label"));
  * </pre>   
+ * 
  * adds the JLabel at the position of the "c1" token in the
  * layout string. You can add components in any order, since
  * their grid positions and extents are derived from the
@@ -224,10 +267,12 @@ import javax.swing.JComponent;
  * <p>
  * As in the other add() method, you can specify additional
  * constraints:
+ * <br><br>
  * <pre>
- *    JButton btn1(new AbstractAction("Push me") {...});
- *    gr.add("c2", btn1, "weightx 5.0");
+ *    JButton btn1 = new JButton("Push me");
+ *    gr.add("c2", btn1, "weightx 5.0 fill horizontal");
  * </pre>
+ * 
  * Any constraints specified in the add() method will override
  * both the default constraints supplied to the Gridder constructor
  * and any embedded constraints from the layout string.
@@ -344,7 +389,6 @@ public class Gridder {
 			augmentedConstraints[0] = embeddedConstraints;
 			System.arraycopy(constraints,0,augmentedConstraints,1,constraints.length);
 			constraints = addGridSizeAndWeightConstraints(cp.width,cp.height,augmentedConstraints);
-			System.out.println(layoutName + " "+constraints[0]);
 			add(comp,cp.row,cp.col,constraints);
 		} else {
 			throw new RuntimeException("No component named "+layoutName+" in layout string.");

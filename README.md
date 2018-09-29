@@ -185,24 +185,24 @@ In general,
 
 - Curly brackets `{` and `}` delimit each grid row;
 - `+` causes the gridwidth of the component to the
-  left to be increased by 1;
+  left to be increased by 1
 - `|` causes the gridheight of the component *directly*
-  above to be increased by 1;
+  above to be increased by 1
 - The `+` and `|` characters extending down and to the right
-  from a component denote the extent of that component.
+  from a component denote the extent of that component
 - `-` simply occupies space. It is used to fill in the
   space occupied by multi-cell components, and to indicate
   empty grid cells.  All grid cells must be
   filled with either a component identifier or
-  one of the characters `|+<^-`;
+  one of the characters `|+<^-`
 - `<` is a synonym for `+` and `^` is a synonym for `|`, for
   historical compatibility with an earlier version
-  of this code.
+  of this code
 - Whitespace within a layout string is ignored except that
    component identifiers such as "c1" are delimited by either
    whitespace or one of the other layout characters `{}|+<^-`
 - Component identifiers are strings that contain
-  no whitespace and none of the characters `{}|+^<-` .
+  no whitespace and none of the characters `{}|+^<-`
 - If a component identifier contains a colon, the
   characters following the colon are interpreted as a
   comma-separated list of constraints in the format
