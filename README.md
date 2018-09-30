@@ -87,8 +87,8 @@ when text-based layouts are used - see below).
 
 |GBC.member     | Gridder name              | Possible values                |  Default
 |---------------|---------------------------|--------------------------------|----------
-|gridwidth      | gridwidth, width          | Integer                        |  1
-|gridheight     | gridheight, height        | Integer                        |  1
+|gridwidth      | gridwidth, width, wd      | Integer                        |  1
+|gridheight     | gridheight, height, ht    | Integer                        |  1
 |weightx        | weightx, wx               | Float                          |  0.0
 |weighty        | weighty, wy               | Float                          |  0.0
 |               | weight*, w* mean "both weights"|                           |
