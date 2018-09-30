@@ -92,7 +92,7 @@ when text-based layouts are used - see below).
 |weightx        | weightx, wx               | Float                          |  0.0
 |weighty        | weighty, wy               | Float                          |  0.0
 |               | weight*, w* mean "both weights"|                           |
-|anchor         | anchor                    | center, ctr, c                 |  center
+|anchor         | anchor, a                 | center, ctr, c                 |  center
 |               |                           | north, n, top                  |
 |               |                           | south, s, bot, bottom          |
 |               |                           | east, e, right, r              |
@@ -102,7 +102,7 @@ when text-based layouts are used - see below).
 |               |                           | southeast, se, bottomright, br |
 |               |                           | southwest, sw, bottomleft, bl  |
 |               |                           | Any of the int anchor values defined in GridBagConstraints  |
-|fill           | fill                      | none, neither                  |  none
+|fill           | fill, f                   | none, neither                  |  none
 |               |                           | horizontal, h, x               |
 |               |                           | vertical, v, y                 |
 |               |                           | both, all, xy, yx, hv, vh      |
