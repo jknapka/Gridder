@@ -23,7 +23,7 @@ public class GridderTest {
 		Gridder gr = new Gridder(top.getContentPane());
 		String layout =
 				 "    {c1                 +   +     c2}    "+
-				 "    {c3:wx1,wy2,i*5,fxy +   c4    - }    "+
+				 "    {c3:wx1,wy2,i*5,fxy +   c4    + }    "+
 				 "    {|                  -   -     c5}    "+
 				 "    {|                  -   c6    + }    ";
 		gr.parseLayout(layout);

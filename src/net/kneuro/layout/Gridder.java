@@ -171,7 +171,7 @@ import javax.swing.JComponent;
  * <pre>
  * String layout =
  *    "    {c1                 + + c2}    "+
- *    "    {c3:wx1,wy2,i*5,fxy + c4 -}    "+
+ *    "    {c3:wx1,wy2,i*5,fxy + c4 +}    "+
  *    "    {|                  - - c5}    "+
  *    "    {|                  - c6 +}    ";
  * gr.parseLayout(layout);
