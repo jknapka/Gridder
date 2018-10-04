@@ -327,14 +327,20 @@ class ConstraintParser {
 	 * which sets weightx to 1.0, weighty to 2.0, and all ipad values to 5
 	 * for component comp1 (using default constraints for all other values).
 	 * This method parses those overridden constraints from an identifier
-	 * string and updates the given GBC object.
+	 * string and returns a string in "constraint1 value1 constraint2 value2 ..."
+	 * form.
 	 * 
 	 * @param id A layout ID string.
 	 * @param gbc The GBC object to update.
 	 */
 	static String parseConstraintsFromIdentifier(String id) {
 		StringBuilder sb = new StringBuilder();
-		String[] constraints = id.split(":")[1].split(",");
+		String[] idAndConstraints = id.split(":");
+		if (idAndConstraints.length < 2) {
+			// No constraints to parse.
+			return "";
+		}
+		String[] constraints = idAndConstraints[1].split(",");
 		for (String cons: constraints) {
 			String[] cnameAndVal = getConstraintNameAndValue(cons);
 			sb.append(' ').append(cnameAndVal[0]).append(' ').append(cnameAndVal[1]);
