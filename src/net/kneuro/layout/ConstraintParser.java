@@ -320,7 +320,7 @@ class ConstraintParser {
 	/**
 	 * A layout identifier may be followed by a colon and a comma-separated
 	 * list of constraint names and values, with no gap between constraint
-	 * names and valueseg:
+	 * names and values, eg:
 	 * 
 	 *   comp1:wx1,wy2,p*5
 	 * 
