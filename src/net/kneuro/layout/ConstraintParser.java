@@ -390,7 +390,7 @@ class ConstraintParser {
 			return new String[]{"w*",constraint.substring(2)};
 		}
 		if (constraint.startsWith("weight*")) {
-			return new String[]{"weight*",constraint.substring(2)};
+			return new String[]{"weight*",constraint.substring(7)};
 		}
 		if (constraint.startsWith("anchor")) {
 			return new String[]{"anchor",constraint.substring(6)};

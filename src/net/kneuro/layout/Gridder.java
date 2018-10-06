@@ -41,7 +41,7 @@ import javax.swing.JComponent;
  *    JFrame topLevel = new JFrame();
  *    Gridder gr = new Gridder(topLevel.getContentPane(),
  *          "weightx 1.0 weighty 0.0",
- *    		"inset_top 5", "inset_bottom", 5,
+ *          "inset_top 5", "inset_bottom", 5,
  *          "anchor center","fill","xy");
  * </pre>
  * 
