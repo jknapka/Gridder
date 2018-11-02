@@ -347,125 +347,58 @@ class ConstraintParser {
 		}
 		return sb.toString().trim();
 	}
+
+	static String[] CONSTRAINT_NAMES = {
+			"gridwidth",
+			"width",
+			"wd",
+			"gridheight",
+			"height",
+			"ht",
+			"weightx",
+			"wx",
+			"weighty",
+			"wy",
+			"w*",
+			"weight*",
+			"anchor",
+			"a",
+			"fill",
+			"f",
+			"ipadx",
+			"px",
+			"ipady",
+			"py",
+			"ipad*",
+			"p*",
+			"inset_top",
+			"insets_top",
+			"it",
+			"inset_bottom",
+			"insets_bottom",
+			"ib",
+			"inset_left",
+			"insets_left",
+			"il",
+			"inset_right",
+			"insets_right",
+			"ir",
+			"insets*",
+			"inset*",
+			"i*"
+	};
 	
 	/**
 	 * Split a single constraintValue token into the constraint name and value.
 	 * @param constraint A constraint and its value run together in a single string,
 	 *        like "wx1.0".
-	 * @return A string with the constraint name and value separated by a space,
-	 *        like "wx 1.0".
+	 * @return A two-element String[] array containing the constraint name and value.
 	 */
 	static String[] getConstraintNameAndValue(String constraint) {
-		if (constraint.startsWith("gridwidth")) {
-			return new String[] {"gridwidth",constraint.substring(9)};
-		}
-		if (constraint.startsWith("width")) {
-			return new String[]{"width",constraint.substring(5)};
-		}
-		if (constraint.startsWith("wd")) {
-			return new String[]{"wd",constraint.substring(2)};
-		}
-		if (constraint.startsWith("gridheight")) {
-			return new String[]{"gridheight",constraint.substring(10)};
-		}
-		if (constraint.startsWith("height")) {
-			return new String[]{"height",constraint.substring(6)};
-		}
-		if (constraint.startsWith("ht")) {
-			return new String[]{"ht",constraint.substring(2)};
-		}
-		if (constraint.startsWith("weightx")) {
-			return new String[]{"weightx",constraint.substring(7)};
-		}
-		if (constraint.startsWith("wx")) {
-			return new String[]{"wx",constraint.substring(2)};
-		}
-		if (constraint.startsWith("weighty")) {
-			return new String[]{"weighty",constraint.substring(7)};
-		}
-		if (constraint.startsWith("wy")) {
-			return new String[]{"wy",constraint.substring(2)};
-		}
-		if (constraint.startsWith("w*")) {
-			return new String[]{"w*",constraint.substring(2)};
-		}
-		if (constraint.startsWith("weight*")) {
-			return new String[]{"weight*",constraint.substring(7)};
-		}
-		if (constraint.startsWith("anchor")) {
-			return new String[]{"anchor",constraint.substring(6)};
-		}
-		if (constraint.startsWith("a")) {
-			return new String[]{"a",constraint.substring(1)};
-		}
-		if (constraint.startsWith("fill")) {
-			return new String[]{"fill",constraint.substring(4)};
-		}
-		if (constraint.startsWith("f")) {
-			return new String[]{"f",constraint.substring(1)};
-		}
-		if (constraint.startsWith("ipadx")) {
-			return new String[]{"ipadx",constraint.substring(5)};
-		}
-		if (constraint.startsWith("px")) {
-			return new String[]{"px",constraint.substring(2)};
-		}
-		if (constraint.startsWith("ipady")) {
-			return new String[]{"ipady",constraint.substring(5)};
-		}
-		if (constraint.startsWith("py")) {
-			return new String[]{"py",constraint.substring(2)};
-		}
-		if (constraint.startsWith("ipad*")) {
-			return new String[]{"ipad*",constraint.substring(5)};
-		}
-		if (constraint.startsWith("p*")) {
-			return new String[]{"p*",constraint.substring(2)};
-		}
-		if (constraint.startsWith("inset_top")) {
-			return new String[]{"inset_top",constraint.substring(9)};
-		}
-		if (constraint.startsWith("insets_top")) {
-			return new String[]{"insets_top",constraint.substring(10)};
-		}
-		if (constraint.startsWith("it")) {
-			return new String[]{"it",constraint.substring(2)};
-		}
-		if (constraint.startsWith("inset_bottom")) {
-			return new String[]{"inset_bottom",constraint.substring(12)};
-		}
-		if (constraint.startsWith("insets_bottom")) {
-			return new String[]{"insets_bottom",constraint.substring(13)};
-		}
-		if (constraint.startsWith("ib")) {
-			return new String[]{"ib",constraint.substring(2)};
-		}
-		if (constraint.startsWith("inset_left")) {
-			return new String[]{"inset_left",constraint.substring(10)};
-		}
-		if (constraint.startsWith("insets_left")) {
-			return new String[]{"insets_left",constraint.substring(11)};
-		}
-		if (constraint.startsWith("il")) {
-			return new String[]{"il",constraint.substring(2)};
-		}
-		if (constraint.startsWith("inset_right")) {
-			return new String[]{"inset_right",constraint.substring(11)};
-		}
-		if (constraint.startsWith("insets_right")) {
-			return new String[]{"insets_right",constraint.substring(12)};
-		}
-		if (constraint.startsWith("ir")) {
-			return new String[]{"ir",constraint.substring(2)};
-		}
-		if (constraint.startsWith("insets*")) {
-			return new String[]{"insets*",constraint.substring(7)};
-		}
-		if (constraint.startsWith("inset*")) {
-			return new String[]{"inset*",constraint.substring(6)};
-		}
-		if (constraint.startsWith("i*")) {
-			return new String[]{"i*",constraint.substring(2)};
+		for (String cname: CONSTRAINT_NAMES) {
+			if (constraint.startsWith(cname)) {
+				return new String[] {constraint.substring(0,cname.length()),constraint.substring(cname.length())};
+			}
 		}
 		throw new RuntimeException("Could not intepret embedded constraint "+constraint);
 	}
