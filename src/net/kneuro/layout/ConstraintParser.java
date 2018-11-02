@@ -331,7 +331,7 @@ class ConstraintParser {
 	 * form.
 	 * 
 	 * @param id A layout ID string.
-	 * @param gbc The GBC object to update.
+	 * @return a layout string in the canonical "name1 value1 name2 value2 ..." form.
 	 */
 	static String parseConstraintsFromIdentifier(String id) {
 		StringBuilder sb = new StringBuilder();
