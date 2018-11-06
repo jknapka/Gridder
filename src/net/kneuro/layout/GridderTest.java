@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2018 Joseph A Knapka
+ * 
+ * This code is released under the terms of the MIT License.
+ */
 package net.kneuro.layout;
 
 import java.awt.GridBagConstraints;

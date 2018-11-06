@@ -29,7 +29,7 @@ class LayoutParser {
 	/**
 	 * Get the positioning information associated with a component ID.
 	 * @param cname The component ID from the layout string.
-	 * @return an int[] containing, in order, the row, column,
+	 * @return a ComponentPosition containing the row, column,
 	 * grid width, and grid height of the component, or null
 	 * if the component was not found.
 	 */

@@ -19,12 +19,18 @@ class ConstraintParser {
 	/**
 	 * Copy a GridBagConstraints object.
 	 * @param from The GBC to copy.
-	 * @return A new GBC initialized from the given one.
+	 * @return A new GBC initialized from the given one. We always
+	 * provide insets, even if the copied GBC doesn't have them.
+	 * They're initialized to 0 if not present.
 	 */
 	static GridBagConstraints copyGBC(GridBagConstraints from) {
 		GridBagConstraints result = new GridBagConstraints();
-		result.insets = new Insets(from.insets.top,from.insets.left,
-				from.insets.bottom,from.insets.right);
+		if (from.insets != null) {
+			result.insets = new Insets(from.insets.top,from.insets.left,
+					from.insets.bottom,from.insets.right);
+		} else {
+			result.insets = new Insets(0,0,0,0);
+		}
 		result.gridx = from.gridx;
 		result.gridy = from.gridy;
 		result.gridwidth = from.gridwidth;
@@ -63,7 +69,8 @@ class ConstraintParser {
 				sb.append(obj.toString().trim());
 			}
 		}
-		return sb.toString().trim();
+		String[] toks = sb.toString().trim().split(" +");
+		return String.join(" ", toks);
 	}
 	
 	/**
@@ -195,7 +202,7 @@ class ConstraintParser {
 			// Nothing to do.
 		}
 		// Not an integer, so interpret the string.
-		switch (value) {
+		switch (value.toLowerCase()) {
 		case "center":
 		case "ctr":
 		case "c":
@@ -262,7 +269,7 @@ class ConstraintParser {
 			// Nothing to do.
 		}
 		// Not an integer, so interpret the string.
-		switch (value) {
+		switch (value.toLowerCase()) {
 		case "none":
 		case "neither":
 		case "n":
