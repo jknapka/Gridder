@@ -179,7 +179,23 @@ And here it is after being resized:
 ![Resized layout](images/GridderTest-2.png)
 
 The four buttons in the lower left are in a separate JPanel
-configured by its own Gridder instance.
+configured by its own Gridder instance created using the
+non-2d API:
+```
+	// Get a JPanel with some buttons. This is an example
+	// of using the basic add(Component,row,col) API.
+	private static JComponent getSubPanel() {
+		JPanel pnl = new JPanel();
+		pnl.setBorder(BorderFactory.createEtchedBorder());
+		Gridder gr = new Gridder(pnl);
+		gr.add(new JLabel("c3: a subpanel"),0,0,"gridwidth 2");
+		gr.add(new JButton("Grow"), 1,0,"anchor nw weightx 1 weighty 1 fill xy");
+		gr.add(new JButton("Float NE"), 1,1,"anchor ne weightx 1 weighty 1");
+		gr.add(new JButton("Stay"), 2,0,"anchor","e");
+		gr.add(new JButton("Together"), 2,1,"anchor",GridBagConstraints.WEST);
+		return pnl;
+	}
+```
 
 In general, 
 
