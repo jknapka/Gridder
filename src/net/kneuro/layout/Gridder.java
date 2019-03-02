@@ -277,31 +277,17 @@ import javax.swing.JComponent;
  * both the default constraints supplied to the Gridder constructor
  * and any embedded constraints from the layout string.
  * <p>
- * There are two more things to remember about constraints when using
- * text-based layouts:
- * <ol>
- * <li> Any gridwidth or gridheight constraints you supply will
+ * When using text-based layouts, keep in mind that any gridwidth
+ *    or gridheight constraints you supply will
  *    be ignored, since those constraints will be derived from
  *    the layout string.
- * <li> If you do not explicitly supply weightx and weighty
- *    constraints, those constraints will be set to 1/100 of
- *    the gridwidth and gridheight of the component, respectively.
- *    This is because usually, we want components to scale
- *    according to their grid size when their container is
- *    resized. This way, you will get reasonable behavior
- *    from a text-based layout if you don't supply any
- *    weights at all. However, if you need to specify weights
- *    explicitly, you can do that for only the components
- *    that need them, provided you use explicit weights that
- *    are large relative to the gridsize/100 values assigned
- *    to other components by default. I advise using explicit
- *    weights with ranges &gt;= 1.0.
- * </ol>
+ * </p>
  * <p>
  * It is, of course, possible to write a nonsensical layout
  * using the simple layout language described above. In the
  * interest of keeping it simple, the code does not defend
  * against this possibility. So don't do that.
+ * </p>
  * 
  * @author jk
  */
@@ -388,7 +374,7 @@ public class Gridder {
 			Object[] augmentedConstraints = new Object[constraints.length + 1];
 			augmentedConstraints[0] = embeddedConstraints;
 			System.arraycopy(constraints,0,augmentedConstraints,1,constraints.length);
-			constraints = addGridSizeAndWeightConstraints(cp.width,cp.height,augmentedConstraints);
+			constraints = addGridSizeConstraints(cp.width,cp.height,augmentedConstraints);
 			add(comp,cp.row,cp.col,constraints);
 		} else {
 			throw new RuntimeException("No component named "+layoutName+" in layout string.");
@@ -427,29 +413,18 @@ public class Gridder {
 
 	/**
 	 * When adding a component based on a layout string, add the necessary
-	 * grid size and weight parameters to the constraints.
+	 * grid size to the constraints.
 	 * @param gridwidth The gridwidth of the component being added.
 	 * @param gridheight The gridheight of the component being added.
 	 * @param constraints A list of constraints.
 	 * @return A new constraint list with the gridwidth, gridheight, and any
 	 * unspecified weight parameters added.
 	 */
-	private Object[] addGridSizeAndWeightConstraints(int gridwidth,int gridheight,Object[] constraints) {
-		String constraintString = ConstraintParser.buildConstraintString(constraints);
-		StringBuilder sb = new StringBuilder(constraintString);
-		String[] constraintToks = constraintString.split(" ");
+	private Object[] addGridSizeConstraints(int gridwidth,int gridheight,Object[] constraints) {
+		final String constraintString = ConstraintParser.buildConstraintString(constraints);
+		final StringBuilder sb = new StringBuilder(constraintString);
 		sb.append(" gridwidth ").append(gridwidth);
 		sb.append(" gridheight ").append(gridheight);
-		if (!arrayContains("weightx",constraintToks) &&
-				!arrayContains("wx",constraintToks) &&
-				!arrayContains("w*",constraintToks)) {
-			sb.append(" weightx ").append((double)gridwidth/100.0);
-		}
-		if (!arrayContains("weighty",constraintToks) &&
-				!arrayContains("wy",constraintToks) &&
-				!arrayContains("w*",constraintToks)) {
-			sb.append(" weighty ").append((double)gridheight/100.0);
-		}
 		return new Object[] {sb.toString()};
 	}
 
@@ -464,25 +439,6 @@ public class Gridder {
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 0),
 				0, 0);
-	}
-
-	/**
-	 * Check whether a String array contains a given String,
-	 * using the .equals() test.
-	 * @param target String to search for.
-	 * @param strs Array to search in.
-	 * @return true if target is in objects.
-	 */
-	private boolean arrayContains(String target,String...strs) {
-		if (target == null) {
-			return false;
-		}
-		for (String str: strs) {
-			if (target.equals(str)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// Return the LayoutParser instance. For test and internal use only.

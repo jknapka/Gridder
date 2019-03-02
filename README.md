@@ -260,26 +260,8 @@ Constraints specified in the add() method will override both
 the default constraints supplied to the Gridder constructor
 *and* any embedded constraints from the layout string.
 
-There are two more things to remember about constraints when using
-text-based layouts:
-
-1. Any `gridwidth` or `gridheight` constraints you supply will
-   be ignored, since those constraints will be derived from
-   the layout string.
-2. If you do not explicitly supply `weightx` and `weighty`
-   constraints in the `add()` method or as embedded constraints, 
-   those constraints will be set to 1/100 of
-   the gridwidth and gridheight of the component, respectively.
-   The default `weightx` and `weighty` constraints supplied to
-   the Gridder constructor are ignored.
-   This is because usually, we want components to scale
-   according to their grid size when their container is
-   resized. This way, you will get reasonable behavior
-   from a text-based layout if you don't supply any
-   weights at all. However, if you need to specify weights
-   explicitly, you can do that for only the components
-   that need them, provided you use explicit weights that
-   are large relative to the gridsize/100 values assigned
-   to other components by default. I advise using explicit
-   weights with ranges >= 1.0.
+When using text-based layouts, keep in mind that any `gridwidth`
+or `gridheight` constraints you supply will
+be ignored, since those constraints will be derived from
+the layout string.
 
